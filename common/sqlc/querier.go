@@ -14,6 +14,14 @@ type Querier interface {
 	GetUser(ctx context.Context, id string) (User, error)
 	ListUsers(ctx context.Context) ([]User, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (string, error)
+
+	//	driver
+	CreateDriver(ctx context.Context, arg CreateDriverParams) (string, error)
+	DeleteDriver(ctx context.Context, id string) error
+	GetDriver(ctx context.Context, id string) (Driver, error)
+	ListDrivers(ctx context.Context) ([]Driver, error)
+	UpdateDriver(ctx context.Context, arg UpdateDriverParams) (string, error)
+
 }
 
 var _ Querier = (*Queries)(nil)

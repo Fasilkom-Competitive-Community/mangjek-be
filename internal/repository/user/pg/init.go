@@ -16,7 +16,9 @@ type pgUserRepository struct {
 
 // CreateUser implements user.User
 func (r pgUserRepository) CreateUser(ctx context.Context, arg uModel.AddUser) (string, error) {
-	id, err := r.querier.CreateUser(ctx, sqlc.CreateUserParams(arg))
+	id, err := r.querier.CreateUser(ctx, sqlc.CreateUserParams{
+		ID: arg.ID,
+	})
 	if err == pgx.ErrNoRows {
 		return "", errorCommon.NewNotFoundError("User not found")
 	}
@@ -38,7 +40,13 @@ func (r pgUserRepository) GetUser(ctx context.Context, id string) (uModel.User, 
 	if err == pgx.ErrNoRows {
 		return uModel.User{}, errorCommon.NewNotFoundError("User not found")
 	}
-	return uModel.User(u), err
+	return uModel.User{
+		ID:        u.ID,
+		Name:      u.Name,
+		Email:     u.Email,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
+	}, err
 }
 
 // VerifyAvailableUser implements user.User
@@ -61,14 +69,24 @@ func (r pgUserRepository) ListUsers(ctx context.Context) ([]uModel.User, error) 
 	us, err := r.querier.ListUsers(ctx)
 	ums := make([]uModel.User, 0)
 	for _, u := range us {
-		ums = append(ums, uModel.User(u))
+		ums = append(ums, uModel.User{
+			ID:        u.ID,
+			Name:      u.Name,
+			Email:     u.Email,
+			CreatedAt: u.CreatedAt,
+			UpdatedAt: u.UpdatedAt,
+		})
 	}
 	return ums, err
 }
 
 // UpdateUser implements user.User
 func (r pgUserRepository) UpdateUser(ctx context.Context, arg uModel.UpdateUser) (string, error) {
-	id, err := r.querier.UpdateUser(ctx, sqlc.UpdateUserParams(arg))
+	id, err := r.querier.UpdateUser(ctx, sqlc.UpdateUserParams{
+		ID:    arg.ID,
+		Name:  arg.Name,
+		Email: arg.Email,
+	})
 	if err == pgx.ErrNoRows {
 		return "", errorCommon.NewNotFoundError("User not found")
 	}
