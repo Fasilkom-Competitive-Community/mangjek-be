@@ -9,7 +9,7 @@ services:
     ports:
       - "4001:4001"
     volumes:
-      - ./configs/var:/var/elmu-be
+      - ./configs/var:/var/mangjek-be
     env_file:
       - .env.local
     environment:

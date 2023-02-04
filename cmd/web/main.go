@@ -4,8 +4,12 @@ import (
 	configCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/config"
 	firebaseCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/firebase/admin"
 	firebaseAuthCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/firebase/auth"
+	firebaseStgCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/firebase/storage"
 	httpCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http"
 	pgCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/pg"
+	dDelivery "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/delivery/driver/http"
+	dRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/driver/pg"
+	dUCase "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/usecase/driver"
 
 	auRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/auth/firebase"
 	uRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/user/pg"
@@ -32,13 +36,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	//fStg, err := firebaseStgCommon.NewFirebaseStorage(app, cfg.BucketName)
-	//if err != nil {
-	//	panic(err)
-	//}
+	_, err = firebaseStgCommon.NewFirebaseStorage(app, cfg.BucketName)
+	if err != nil {
+		panic(err)
+	}
 
 	h := httpCommon.NewHTTPServer()
-	//localhost:3000/api/v1/
 	api := h.Router.Group("/api/v1", gin.Logger(), httpCommon.CORS())
 
 	aur := auRepo.NewFirebaseAuthRepository(fAuth)
@@ -46,6 +49,10 @@ func main() {
 	ur := uRepo.NewPGUserRepository(querier)
 	uc := uUCase.NewUserUsecase(ur, aur)
 	uDelivery.NewHTTPUserDelivery(api, uc, fAuth)
+
+	dr := dRepo.NewPGDriverRepository(querier)
+	dc := dUCase.NewDriverUsecase(dr, aur)
+	dDelivery.NewHTTPDriverDelivery(api, dc, fAuth)
 
 	log.Fatal(h.Router.Run(fmt.Sprintf(":%d", cfg.Port)))
 }

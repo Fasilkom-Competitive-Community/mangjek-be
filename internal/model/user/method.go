@@ -4,10 +4,6 @@ func (m AuthUser) IsAdmin() bool {
 	return m.Role >= ADMIN
 }
 
-func (m AuthUser) IsDriver() bool {
-	return m.Role == DRIVER
-}
-
 func (m AuthUser) IsSame(ID string) bool {
 	return m.ID == ID
 }

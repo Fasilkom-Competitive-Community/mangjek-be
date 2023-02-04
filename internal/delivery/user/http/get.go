@@ -10,8 +10,7 @@ import (
 
 func (d HTTPUserDelivery) getUser(c *gin.Context) {
 	ctx := c.Request.Context()
-	auStr, _ := c.Get(httpCommon.AUTH_USER)
-	au := auStr.(uModel.AuthUser)
+	au := c.MustGet(httpCommon.AUTH_USER).(uModel.AuthUser)
 
 	id := c.Param("id")
 

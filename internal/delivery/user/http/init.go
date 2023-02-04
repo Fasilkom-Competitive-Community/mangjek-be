@@ -14,9 +14,9 @@ type HTTPUserDelivery struct {
 func NewHTTPUserDelivery(g *gin.RouterGroup, userUCase uUCase.Usecase, fAuth *auth.Client) HTTPUserDelivery {
 	h := HTTPUserDelivery{userUCase: userUCase}
 
-	g.GET("/users/:id", h.getUser, httpCommon.Auth(fAuth))
-	g.POST("/users", h.addUser, httpCommon.Auth(fAuth))
-	g.PUT("/users/:id", h.updateUser, httpCommon.Auth(fAuth))
+	g.GET("/users/:id", httpCommon.Auth(fAuth), h.getUser)
+	g.POST("/users", httpCommon.Auth(fAuth), h.addUser)
+	g.PUT("/users/:id", httpCommon.Auth(fAuth), h.updateUser)
 
 	return h
 }

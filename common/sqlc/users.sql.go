@@ -12,19 +12,29 @@ import (
 const createUser = `-- name: CreateUser :one
 INSERT INTO users ( id
                   , name
-                  , email)
-VALUES ($1, $2, $3)
+                  , email
+                  , phone_number
+                  , nim)
+VALUES ($1, $2, $3, $4, $5)
 RETURNING id
 `
 
 type CreateUserParams struct {
-	ID    string `db:"id"`
-	Name  string `db:"name"`
-	Email string `db:"email"`
+	ID          string `db:"id"`
+	Name        string `db:"name"`
+	Email       string `db:"email"`
+	PhoneNumber string `db:"phone_number"`
+	Nim         string `db:"nim"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (string, error) {
-	row := q.db.QueryRow(ctx, createUser, arg.ID, arg.Name, arg.Email)
+	row := q.db.QueryRow(ctx, createUser,
+		arg.ID,
+		arg.Name,
+		arg.Email,
+		arg.PhoneNumber,
+		arg.Nim,
+	)
 	var id string
 	err := row.Scan(&id)
 	return id, err
@@ -45,6 +55,8 @@ const getUser = `-- name: GetUser :one
 SELECT id
      , name
      , email
+     , phone_number
+     , nim
      , created_at
      , updated_at
 FROM users
@@ -58,6 +70,8 @@ func (q *Queries) GetUser(ctx context.Context, id string) (User, error) {
 		&i.ID,
 		&i.Name,
 		&i.Email,
+		&i.PhoneNumber,
+		&i.Nim,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -68,6 +82,8 @@ const listUsers = `-- name: ListUsers :many
 SELECT id
      , name
      , email
+     , phone_number
+     , nim
      , created_at
      , updated_at
 FROM users
@@ -86,6 +102,8 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 			&i.ID,
 			&i.Name,
 			&i.Email,
+			&i.PhoneNumber,
+			&i.Nim,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -101,21 +119,31 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 
 const updateUser = `-- name: UpdateUser :one
 UPDATE users
-SET name       = $2
-  , email      = $3
-  , updated_at = CURRENT_TIMESTAMP
+SET name         = $2
+  , email        = $3
+  , phone_number = $4
+  , nim          = $5
+  , updated_at   = CURRENT_TIMESTAMP
 WHERE id = $1
 RETURNING id
 `
 
 type UpdateUserParams struct {
-	ID    string `db:"id"`
-	Name  string `db:"name"`
-	Email string `db:"email"`
+	ID          string `db:"id"`
+	Name        string `db:"name"`
+	Email       string `db:"email"`
+	PhoneNumber string `db:"phone_number"`
+	Nim         string `db:"nim"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (string, error) {
-	row := q.db.QueryRow(ctx, updateUser, arg.ID, arg.Name, arg.Email)
+	row := q.db.QueryRow(ctx, updateUser,
+		arg.ID,
+		arg.Name,
+		arg.Email,
+		arg.PhoneNumber,
+		arg.Nim,
+	)
 	var id string
 	err := row.Scan(&id)
 	return id, err

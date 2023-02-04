@@ -22,10 +22,12 @@ func (h HTTPServer) errorHandler() gin.HandlerFunc {
 				for _, ve := range ves {
 					keys[ve.Field()] = ve.Tag()
 				}
+				//c.Writer.Header().Set("Content-Type", "application/json")
 				render.JSON{Data: Error{
 					Message: err.Error(),
 					Errors:  keys,
 				}}.Render(c.Writer)
+
 				return
 			}
 			switch err := err.Err.(type) {

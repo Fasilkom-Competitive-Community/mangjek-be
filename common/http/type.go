@@ -13,22 +13,24 @@ type (
 	}
 
 	User struct {
-		ID        string    `json:"id"`
-		Name      string    `json:"name"`
-		Email     string    `json:"email"`
-		CreatedAt time.Time `json:"created_at"`
-		UpdatedAt time.Time `json:"updated_at"`
+		ID          string    `json:"id"`
+		Name        string    `json:"name"`
+		Email       string    `json:"email"`
+		PhoneNumber string    `json:"phone_number"`
+		Nim         string    `json:"nim"`
+		CreatedAt   time.Time `json:"created_at"`
+		UpdatedAt   time.Time `json:"updated_at"`
 	}
 	AddUser struct {
-		ID          string `json:"id" validate:"required"`
-		Email       string `json:"email" validate:"required,email,contains=@student.unsri.ac.id"`
-		Name        string `json:"name" validate:"required"`
-		PhoneNumber string `json:"phone_number" validate:"required"`
+		ID          string `json:"id" binding:"required"`
+		Email       string `json:"email" binding:"required,email,contains=@student.unsri.ac.id"`
+		Name        string `json:"name" binding:"required"`
+		PhoneNumber string `json:"phone_number" binding:"required,min=10,max=13"`
 	}
 	UpdateUser struct {
-		ID          string `json:"id" validate:"required"`
-		Email       string `json:"email" validate:"required,email,contains=@student.unsri.ac.id"`
-		Name        string `json:"name" validate:"required"`
-		PhoneNumber string `json:"phone_number" validate:"required"`
+		ID          string `json:"id" binding:"required"`
+		Email       string `json:"email" binding:"required,email,contains=@student.unsri.ac.id"`
+		Name        string `json:"name" binding:"required"`
+		PhoneNumber string `json:"phone_number" binding:"required,min=10,max=13"`
 	}
 )

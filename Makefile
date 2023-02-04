@@ -61,9 +61,6 @@ web:
 db:
 	@docker-compose up --build -d db
 
-.PHONY: worker
-worker:
-	@docker-compose up --build -d worker
 
 .PHONY: migrate-up
 migrate-up:
