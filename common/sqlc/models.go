@@ -8,10 +8,26 @@ import (
 	"time"
 )
 
+type Driver struct {
+	ID           int32     `db:"id"`
+	UserID       string    `db:"user_id"`
+	PoliceNumber string    `db:"police_number"`
+	VehicleModel string    `db:"vehicle_model"`
+	VehicleType  string    `db:"vehicle_type"`
+	Nik          string    `db:"nik"`
+	Address      string    `db:"address"`
+	IsSimActive  bool      `db:"is_sim_active"`
+	IsStnkActive bool      `db:"is_stnk_active"`
+	CreatedAt    time.Time `db:"created_at"`
+	UpdatedAt    time.Time `db:"updated_at"`
+}
+
 type User struct {
-	ID        string    `db:"id"`
-	Name      string    `db:"name"`
-	Email     string    `db:"email"`
-	CreatedAt time.Time `db:"created_at"`
-	UpdatedAt time.Time `db:"updated_at"`
+	ID          string    `db:"id"`
+	Name        string    `db:"name"`
+	Email       string    `db:"email"`
+	PhoneNumber string    `db:"phone_number"`
+	Nim         string    `db:"nim"`
+	CreatedAt   time.Time `db:"created_at"`
+	UpdatedAt   time.Time `db:"updated_at"`
 }

@@ -6,7 +6,7 @@ import (
 	errorCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/error"
 	"github.com/Fasilkom-Competitive-Community/mangjek-be/common/sqlc"
 	uModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/user"
-	sRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/user"
+	uRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/user"
 	"github.com/jackc/pgx/v4"
 )
 
@@ -75,6 +75,6 @@ func (r pgUserRepository) UpdateUser(ctx context.Context, arg uModel.UpdateUser)
 	return id, err
 }
 
-func NewPGUserRepository(querier sqlc.Querier) sRepo.Repository {
+func NewPGUserRepository(querier sqlc.Querier) uRepo.Repository {
 	return pgUserRepository{querier: querier}
 }

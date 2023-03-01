@@ -40,7 +40,7 @@ func (u userUsecase) CreateUser(ctx context.Context, arg uModel.AddUser, au uMod
 		return "", errors.New("CREATE_USER.USER_EXISTS")
 	}
 
-	arg.NIM = strings.Split(arg.Email, "@")[0]
+	arg.Nim = strings.Split(arg.Email, "@student.unsri.ac.id")[0]
 	return u.uRepository.CreateUser(ctx, arg)
 }
 
@@ -75,7 +75,7 @@ func (u userUsecase) UpdateUser(ctx context.Context, arg uModel.UpdateUser, au u
 	if !au.IsSame(arg.ID) {
 		return "", errors.New("UPDATE_USER.USER_NOT_AUTHORIZED")
 	}
-	arg.NIM = strings.Split(arg.Email, "@")[0]
+	arg.Nim = strings.Split(arg.Email, "@")[0]
 	return u.uRepository.UpdateUser(ctx, arg)
 }
 

@@ -6,18 +6,37 @@ import (
 
 type (
 	Driver struct {
-		ID     int32
-		UserID string
+		ID           int32
+		UserID       string
+		PoliceNumber string
+		VehicleModel string
+		VehicleType  string
+		Nik          string
+		Address      string
+		IsSimActive  bool
+		IsStnkActive bool
 
 		CreatedAt time.Time
 		UpdatedAt time.Time
 	}
 	AddDriver struct {
-		ID     int32
-		UserID string
+		UserID       string
+		PoliceNumber string
+		VehicleModel string
+		VehicleType  string
+		Nik          string
+		Address      string
+		IsSimActive  bool
+		IsStnkActive bool
 	}
 	UpdateDriver struct {
-		ID     int32
-		UserID string
+		UserID       string
+		PoliceNumber string
+		VehicleModel string
+		VehicleType  string
+		Nik          string
+		Address      string
+		IsSimActive  bool
+		IsStnkActive bool
 	}
 )
