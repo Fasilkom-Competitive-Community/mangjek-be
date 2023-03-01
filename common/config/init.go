@@ -6,6 +6,7 @@ type (
 	config struct {
 		Port        int    `env:"PORT,unset" envDefault:"4001"`
 		DatabaseURL string `env:"DATABASE_URL,unset"`
+		GMapAPIKey  string `env:"GMAP_API_KEY,unset"`
 
 		Firebase
 	}

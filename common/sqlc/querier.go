@@ -10,11 +10,14 @@ import (
 
 type Querier interface {
 	CreateDriver(ctx context.Context, arg CreateDriverParams) (int32, error)
+	CreateOrderInquiry(ctx context.Context, arg CreateOrderInquiryParams) (string, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (string, error)
 	DeleteDriver(ctx context.Context, id int32) error
+	DeleteOrderInquiry(ctx context.Context, id string) error
 	DeleteUser(ctx context.Context, id string) error
 	GetDriver(ctx context.Context, id int32) (Driver, error)
 	GetDriverByUserID(ctx context.Context, userID string) (Driver, error)
+	GetOrderInquiry(ctx context.Context, id string) (GetOrderInquiryRow, error)
 	GetUser(ctx context.Context, id string) (User, error)
 	ListDrivers(ctx context.Context) ([]Driver, error)
 	ListUsers(ctx context.Context) ([]User, error)

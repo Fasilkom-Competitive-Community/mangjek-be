@@ -22,6 +22,23 @@ type Driver struct {
 	UpdatedAt    time.Time `db:"updated_at"`
 }
 
+type OrderInquiry struct {
+	ID                 string    `db:"id"`
+	UserID             string    `db:"user_id"`
+	OriginLat          float64   `db:"origin_lat"`
+	OriginLong         float64   `db:"origin_long"`
+	OriginAddress      string    `db:"origin_address"`
+	DestinationLat     float64   `db:"destination_lat"`
+	DestinationLong    float64   `db:"destination_long"`
+	DestinationAddress string    `db:"destination_address"`
+	Price              int64     `db:"price"`
+	Distance           int32     `db:"distance"`
+	Duration           int32     `db:"duration"`
+	Routes             string    `db:"routes"`
+	CreatedAt          time.Time `db:"created_at"`
+	UpdatedAt          time.Time `db:"updated_at"`
+}
+
 type User struct {
 	ID          string    `db:"id"`
 	Name        string    `db:"name"`

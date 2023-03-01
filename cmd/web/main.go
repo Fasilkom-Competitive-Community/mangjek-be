@@ -5,18 +5,22 @@ import (
 	firebaseCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/firebase/admin"
 	firebaseAuthCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/firebase/auth"
 	firebaseStgCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/firebase/storage"
+	"github.com/Fasilkom-Competitive-Community/mangjek-be/common/gmap"
 	httpCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http"
 	pgCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/pg"
+	oDelivery "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/delivery/order/http"
+
 	dDelivery "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/delivery/driver/http"
 	dRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/driver/pg"
 	dUCase "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/usecase/driver"
 
-	auRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/auth/firebase"
-	uRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/user/pg"
-
-	uUCase "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/usecase/user"
+	oRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/order/pg"
+	oUCase "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/usecase/order"
 
 	uDelivery "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/delivery/user/http"
+	auRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/auth/firebase"
+	uRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/user/pg"
+	uUCase "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/usecase/user"
 
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -41,6 +45,11 @@ func main() {
 		panic(err)
 	}
 
+	gMap, err := gmap.NewGMap(cfg.GMapAPIKey)
+	if err != nil {
+		panic(err)
+	}
+
 	h := httpCommon.NewHTTPServer()
 	api := h.Router.Group("/api/v1", gin.Logger(), httpCommon.CORS())
 
@@ -53,6 +62,10 @@ func main() {
 	dr := dRepo.NewPGDriverRepository(querier)
 	dc := dUCase.NewDriverUsecase(dr, aur)
 	dDelivery.NewHTTPDriverDelivery(api, dc, fAuth)
+
+	or := oRepo.NewPGOrderInquiryRepository(querier)
+	oc := oUCase.NewOrderUsecase(or, gMap)
+	oDelivery.NewHTTPOrderDelivery(api, oc, fAuth)
 
 	log.Fatal(h.Router.Run(fmt.Sprintf(":%d", cfg.Port)))
 }
