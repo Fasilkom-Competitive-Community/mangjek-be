@@ -12,7 +12,7 @@ type Usecase interface {
 }
 
 type Writer interface {
-	CreateOrderInquiry(ctx context.Context, arg oModel.AddOrderInquiry, au uModel.AuthUser) (oModel.Direction, oModel.OrderInquiry, error)
+	CreateOrderInquiry(ctx context.Context, arg oModel.AddOrderInquiry, au uModel.AuthUser) (oModel.OrderInquiry, error)
 	DeleteOrderInquiry(ctx context.Context, id string, au uModel.AuthUser) error
 }
 

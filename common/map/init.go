@@ -1,4 +1,4 @@
-package gmap
+package _map
 
 import (
 	"context"

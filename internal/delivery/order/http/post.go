@@ -20,7 +20,7 @@ func (d HTTPOrderDelivery) addOrderInquiry(c *gin.Context) {
 		return
 	}
 
-	rdr, roi, err := d.orderUCase.CreateOrderInquiry(ctx, oModel.AddOrderInquiry{
+	roi, err := d.orderUCase.CreateOrderInquiry(ctx, oModel.AddOrderInquiry{
 		UserID: oi.UserID,
 		Origin: oModel.Location{
 			Latitude:  oi.Origin.Latitude,
@@ -36,7 +36,13 @@ func (d HTTPOrderDelivery) addOrderInquiry(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, httpOrderCommon.OrderInquiry{
+	rList, err := roi.RoutesList()
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	resp := httpOrderCommon.OrderInquiry{
 		ID:       roi.ID,
 		UserID:   roi.UserID,
 		Price:    roi.Price,
@@ -54,5 +60,15 @@ func (d HTTPOrderDelivery) addOrderInquiry(c *gin.Context) {
 		},
 		CreatedAt: roi.CreatedAt,
 		UpdatedAt: roi.UpdatedAt,
-	})
+	}
+
+	resp.Routes = make([]httpOrderCommon.Location, 0)
+	for _, location := range rList {
+		resp.Routes = append(resp.Routes, httpOrderCommon.Location{
+			Latitude:  location.Latitude,
+			Longitude: location.Longitude,
+		})
+	}
+
+	c.JSON(http.StatusCreated, resp)
 }

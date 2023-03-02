@@ -5,9 +5,10 @@ import (
 	firebaseCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/firebase/admin"
 	firebaseAuthCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/firebase/auth"
 	firebaseStgCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/firebase/storage"
-	"github.com/Fasilkom-Competitive-Community/mangjek-be/common/gmap"
 	httpCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http"
+	mapCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/map"
 	pgCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/pg"
+	uuidCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/uuid"
 	oDelivery "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/delivery/order/http"
 
 	dDelivery "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/delivery/driver/http"
@@ -45,10 +46,12 @@ func main() {
 		panic(err)
 	}
 
-	gMap, err := gmap.NewGMap(cfg.GMapAPIKey)
+	gMap, err := mapCommon.NewMapCalculator(cfg.GMapAPIKey)
 	if err != nil {
 		panic(err)
 	}
+
+	uuid := uuidCommon.NewUUIDGenerator()
 
 	h := httpCommon.NewHTTPServer()
 	api := h.Router.Group("/api/v1", gin.Logger(), httpCommon.CORS())
@@ -64,7 +67,7 @@ func main() {
 	dDelivery.NewHTTPDriverDelivery(api, dc, fAuth)
 
 	or := oRepo.NewPGOrderInquiryRepository(querier)
-	oc := oUCase.NewOrderUsecase(or, gMap)
+	oc := oUCase.NewOrderUsecase(or, gMap, uuid)
 	oDelivery.NewHTTPOrderDelivery(api, oc, fAuth)
 
 	log.Fatal(h.Router.Run(fmt.Sprintf(":%d", cfg.Port)))

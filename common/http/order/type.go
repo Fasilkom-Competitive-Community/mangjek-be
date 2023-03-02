@@ -15,15 +15,16 @@ type (
 	}
 
 	OrderInquiry struct {
-		ID          string    `json:"id"`
-		UserID      string    `json:"user_id"`
-		Price       int64     `json:"price"`
-		Distance    int32     `json:"distance"`
-		Duration    int32     `json:"duration"`
-		Origin      Location  `json:"origin"`
-		Destination Location  `json:"destination"`
-		CreatedAt   time.Time `json:"created_at"`
-		UpdatedAt   time.Time `json:"updated_at"`
+		ID          string     `json:"id"`
+		UserID      string     `json:"user_id"`
+		Price       int64      `json:"price"`
+		Distance    int32      `json:"distance"`
+		Duration    int32      `json:"duration"`
+		Origin      Location   `json:"origin"`
+		Destination Location   `json:"destination"`
+		Routes      []Location `json:"routes"`
+		CreatedAt   time.Time  `json:"created_at"`
+		UpdatedAt   time.Time  `json:"updated_at"`
 	}
 
 	AddOrderInquiry struct {
