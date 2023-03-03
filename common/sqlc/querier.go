@@ -11,6 +11,7 @@ import (
 type Querier interface {
 	CreateDriver(ctx context.Context, arg CreateDriverParams) (int32, error)
 	CreateOrderInquiry(ctx context.Context, arg CreateOrderInquiryParams) (string, error)
+	CreatePayment(ctx context.Context, arg CreatePaymentParams) (string, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (string, error)
 	DeleteDriver(ctx context.Context, id int32) error
 	DeleteOrderInquiry(ctx context.Context, id string) error
@@ -18,10 +19,12 @@ type Querier interface {
 	GetDriver(ctx context.Context, id int32) (Driver, error)
 	GetDriverByUserID(ctx context.Context, userID string) (Driver, error)
 	GetOrderInquiry(ctx context.Context, id string) (GetOrderInquiryRow, error)
+	GetPayment(ctx context.Context, id string) (GetPaymentRow, error)
 	GetUser(ctx context.Context, id string) (User, error)
 	ListDrivers(ctx context.Context) ([]Driver, error)
 	ListUsers(ctx context.Context) ([]User, error)
 	UpdateDriver(ctx context.Context, arg UpdateDriverParams) (int32, error)
+	UpdatePaymentStatusToPaid(ctx context.Context, arg UpdatePaymentStatusToPaidParams) (string, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (string, error)
 }
 

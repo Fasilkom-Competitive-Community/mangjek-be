@@ -39,6 +39,16 @@ type OrderInquiry struct {
 	UpdatedAt          time.Time `db:"updated_at"`
 }
 
+type Payment struct {
+	ID        string    `db:"id"`
+	Amount    float64   `db:"amount"`
+	Method    string    `db:"method"`
+	Status    string    `db:"status"`
+	QrStr     string    `db:"qr_str"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
+}
+
 type User struct {
 	ID          string    `db:"id"`
 	Name        string    `db:"name"`

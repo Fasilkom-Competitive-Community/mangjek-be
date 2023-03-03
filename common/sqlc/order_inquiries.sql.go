@@ -11,7 +11,8 @@ import (
 )
 
 const createOrderInquiry = `-- name: CreateOrderInquiry :one
-INSERT INTO order_inquiries ( user_id
+INSERT INTO order_inquiries ( id
+                            , user_id
                             , price
                             , distance
                             , duration
@@ -22,11 +23,12 @@ INSERT INTO order_inquiries ( user_id
                             , destination_long
                             , destination_address
                             , routes)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
 RETURNING id
 `
 
 type CreateOrderInquiryParams struct {
+	ID                 string  `db:"id"`
 	UserID             string  `db:"user_id"`
 	Price              int64   `db:"price"`
 	Distance           int32   `db:"distance"`
@@ -42,6 +44,7 @@ type CreateOrderInquiryParams struct {
 
 func (q *Queries) CreateOrderInquiry(ctx context.Context, arg CreateOrderInquiryParams) (string, error) {
 	row := q.db.QueryRow(ctx, createOrderInquiry,
+		arg.ID,
 		arg.UserID,
 		arg.Price,
 		arg.Distance,

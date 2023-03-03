@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS payments
+(
+    id         VARCHAR(150) PRIMARY KEY,
+    amount     DOUBLE PRECISION NOT NULL,
+    method     VARCHAR(100)     NOT NULL,
+    status     VARCHAR(50)      NOT NULL DEFAULT 'UNPAID',
+    qr_str     VARCHAR(255)     NOT NULL DEFAULT '',
+
+    created_at TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
+)
