@@ -16,6 +16,7 @@ type pgOrderInquiryRepository struct {
 // CreateOrderInquiry implements order.OrderInquiry
 func (r pgOrderInquiryRepository) CreateOrderInquiry(ctx context.Context, arg oModel.AddOrderInquiry) (string, error) {
 	id, err := r.querier.CreateOrderInquiry(ctx, sqlc.CreateOrderInquiryParams{
+		ID:                 arg.ID,
 		UserID:             arg.UserID,
 		Price:              arg.Price,
 		Distance:           arg.Distance,

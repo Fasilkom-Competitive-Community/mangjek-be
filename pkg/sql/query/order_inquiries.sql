@@ -17,7 +17,8 @@ FROM order_inquiries
 WHERE id = $1;
 
 -- name: CreateOrderInquiry :one
-INSERT INTO order_inquiries ( user_id
+INSERT INTO order_inquiries ( id
+                            , user_id
                             , price
                             , distance
                             , duration
@@ -28,7 +29,7 @@ INSERT INTO order_inquiries ( user_id
                             , destination_long
                             , destination_address
                             , routes)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
 RETURNING id;
 
 -- name: DeleteOrderInquiry :exec
