@@ -14,6 +14,8 @@ type Usecase interface {
 type Writer interface {
 	CreateOrderInquiry(ctx context.Context, arg oModel.AddOrderInquiry, au uModel.AuthUser) (oModel.OrderInquiry, error)
 	DeleteOrderInquiry(ctx context.Context, id string, au uModel.AuthUser) error
+
+	CreateOrder(ctx context.Context, order oModel.AddOrder, au uModel.AuthUser) (oModel.Order, error)
 }
 
 type Reader interface {

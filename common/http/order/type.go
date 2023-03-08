@@ -10,8 +10,8 @@ type (
 	}
 
 	AddLocation struct {
-		Latitude  float64 `json:"latitude" validate:"required,latitude"`
-		Longitude float64 `json:"longitude" validate:"required,longitude"`
+		Latitude  float64 `json:"latitude" binding:"required,latitude"`
+		Longitude float64 `json:"longitude" binding:"required,longitude"`
 	}
 
 	OrderInquiry struct {
@@ -28,8 +28,16 @@ type (
 	}
 
 	AddOrderInquiry struct {
-		UserID      string      `json:"user_id" validate:"required"`
+		UserID      string      `json:"user_id" binding:"required"`
 		Origin      AddLocation `json:"origin"`
 		Destination AddLocation `json:"destination"`
+	}
+
+	AddOrder struct {
+		DriverID       string  `json:"driver_id" binding:"required"`
+		UserID         string  `json:"user_id" binding:"required"`
+		OrderInquiryID string  `json:"order_inquiry_id" binding:"required"`
+		Amount         float64 `json:"amount" binding:"required"`
+		PaymentMethod  string  `json:"payment_method" binding:"required,oneof=CASH QRIS"`
 	}
 )

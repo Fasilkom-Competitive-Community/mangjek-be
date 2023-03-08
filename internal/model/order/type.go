@@ -1,8 +1,20 @@
 package order
 
-import "time"
+import (
+	dModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/driver"
+	pModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/payment"
+	"time"
+)
+
+const (
+	OnProgressStatus Status = "ON PROGRESS"
+	PickedUpStatus   Status = "PICKED UP"
+	ArrivedStatus    Status = "ARRIVED"
+)
 
 type (
+	Status string
+
 	OrderInquiry struct {
 		ID           string
 		UserID       string
@@ -27,6 +39,20 @@ type (
 		Origin      Location
 		Destination Location
 		Routes      string
+	}
+
+	Order struct {
+		ID      string
+		Driver  dModel.Driver
+		Payment pModel.Payment
+	}
+
+	AddOrder struct {
+		ID             string
+		UserID         string
+		DriverID       string
+		OrderInquiryID string
+		PaymentID      string
 	}
 
 	Location struct {

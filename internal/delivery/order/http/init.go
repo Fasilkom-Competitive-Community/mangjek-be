@@ -14,6 +14,7 @@ type HTTPOrderDelivery struct {
 func NewHTTPOrderDelivery(g *gin.RouterGroup, orderUCase oUCase.Usecase, fAuth *auth.Client) HTTPOrderDelivery {
 	h := HTTPOrderDelivery{orderUCase: orderUCase}
 
+	g.POST("/orders", httpCommon.Auth(fAuth), h.addOrder)
 	g.GET("/orders/inquiry/:inquiryId", httpCommon.Auth(fAuth), h.getOrderInquiry)
 	g.POST("/orders/inquiry", httpCommon.Auth(fAuth), h.addOrderInquiry)
 

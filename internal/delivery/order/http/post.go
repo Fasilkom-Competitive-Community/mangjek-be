@@ -72,3 +72,14 @@ func (d HTTPOrderDelivery) addOrderInquiry(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, resp)
 }
+
+func (d HTTPOrderDelivery) addOrder(c *gin.Context) {
+	ctx := c.Request.Context()
+	au := c.MustGet(httpCommon.AUTH_USER).(uModel.AuthUser)
+
+	var o httpOrderCommon.AddOrder
+	if err := c.ShouldBindJSON(&o); err != nil {
+		c.Error(err).SetType(gin.ErrorTypeBind)
+		return
+	}
+}
