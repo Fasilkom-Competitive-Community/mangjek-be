@@ -23,6 +23,8 @@ import (
 	uRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/user/pg"
 	uUCase "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/usecase/user"
 
+	fDelivery "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/delivery/file/http"
+
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -69,6 +71,8 @@ func main() {
 	or := oRepo.NewPGOrderInquiryRepository(querier)
 	oc := oUCase.NewOrderUsecase(or, gMap, uuid)
 	oDelivery.NewHTTPOrderDelivery(api, oc, fAuth)
+
+	fDelivery.NewHTTPFileDelivery(api, fAuth)
 
 	log.Fatal(h.Router.Run(fmt.Sprintf(":%d", cfg.Port)))
 }

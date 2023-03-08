@@ -3,6 +3,7 @@ package order
 import (
 	"context"
 	"errors"
+	"fmt"
 	oModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/order"
 	uModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/user"
 )
@@ -15,12 +16,15 @@ func (u orderUsecase) CreateOrderInquiry(ctx context.Context, arg oModel.AddOrde
 	if !au.IsSame(arg.UserID) {
 		return oModel.OrderInquiry{}, ErrCreateOrderInquiry_UserNotAuthorized
 	}
+	fmt.Println("same user amann")
 
 	// Calculate distance, Overview Polyline
 	dr, err := u.mapCalculator.CalculateDirection(ctx, arg.Origin, arg.Destination)
 	if err != nil {
+		fmt.Println(err)
 		return oModel.OrderInquiry{}, err
 	}
+	fmt.Println("same dr", dr)
 
 	/* Calculate price
 	Rp2000 per km
@@ -29,8 +33,11 @@ func (u orderUsecase) CreateOrderInquiry(ctx context.Context, arg oModel.AddOrde
 
 	arg.ID, err = u.uuidGenerator.GenerateUUID()
 	if err != nil {
+		fmt.Println(err)
 		return oModel.OrderInquiry{}, err
 	}
+
+	fmt.Println("arg aman", arg.ID)
 
 	arg.Price = int64(dr.Distance) * 2
 	arg.Duration = dr.Duration
