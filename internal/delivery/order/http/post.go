@@ -1,7 +1,6 @@
 package http
 
 import (
-	"fmt"
 	httpCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http"
 	oModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/order"
 	"github.com/gin-gonic/gin"
@@ -15,34 +14,27 @@ func (d HTTPOrderDelivery) addOrderInquiry(c *gin.Context) {
 	ctx := c.Request.Context()
 	au := c.MustGet(httpCommon.AUTH_USER).(uModel.AuthUser)
 
-	fmt.Println("s,ssmm")
-
 	var oi httpOrderCommon.AddOrderInquiry
 	if err := c.ShouldBindJSON(&oi); err != nil {
-		fmt.Println(err)
 		c.Error(err).SetType(gin.ErrorTypeBind)
 		return
 	}
 
-	fmt.Println("ini io", oi)
-
 	roi, err := d.orderUCase.CreateOrderInquiry(ctx, oModel.AddOrderInquiry{
 		UserID: oi.UserID,
 		Origin: oModel.Location{
-			Latitude:  oi.OriginLatitude,
-			Longitude: oi.OriginLongitude,
+			Latitude:  oi.Origin.Latitude,
+			Longitude: oi.Origin.Longitude,
 		},
 		Destination: oModel.Location{
-			Latitude:  oi.DestinationLatitude,
-			Longitude: oi.DestinationLongitude,
+			Latitude:  oi.Destination.Latitude,
+			Longitude: oi.Destination.Longitude,
 		},
 	}, au)
 	if err != nil {
 		c.Error(err)
 		return
 	}
-
-	fmt.Println("ini roi", oi)
 
 	rList, err := roi.RoutesList()
 	if err != nil {

@@ -28,10 +28,8 @@ type (
 	}
 
 	AddOrderInquiry struct {
-		UserID               string  `json:"user_id" binding:"required"`
-		OriginLatitude       float64 `json:"origin_latitude" binding:"required"`
-		OriginLongitude      float64 `json:"origin_longitude" binding:"required"`
-		DestinationLatitude  float64 `json:"destination_latitude" binding:"required"`
-		DestinationLongitude float64 `json:"destination_longitude" binding:"required"`
+		UserID      string   `json:"user_id" binding:"required"`
+		Origin      Location `json:"origin"`
+		Destination Location `json:"destination"`
 	}
 )

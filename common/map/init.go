@@ -25,8 +25,8 @@ func NewMapCalculator(apiKey string) (*MapCalculator, error) {
 func (m *MapCalculator) CalculateDirection(ctx context.Context, origin oModel.Location, destination oModel.Location) (oModel.Direction, error) {
 	fmt.Println(origin, destination)
 	// Format float with 15 digits after comma
-	org := fmt.Sprintf("%.15f|%.15f", origin.Latitude, origin.Longitude)
-	dst := fmt.Sprintf("%.15f|%.15f", destination.Latitude, destination.Longitude)
+	org := fmt.Sprintf("%.15f,%.15f", origin.Latitude, origin.Longitude)
+	dst := fmt.Sprintf("%.15f,%.15f", destination.Latitude, destination.Longitude)
 
 	request := &maps.DirectionsRequest{
 		Origin:        org,
