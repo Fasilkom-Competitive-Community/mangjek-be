@@ -22,6 +22,17 @@ type Driver struct {
 	UpdatedAt    time.Time `db:"updated_at"`
 }
 
+type Order struct {
+	ID             string    `db:"id"`
+	UserID         string    `db:"user_id"`
+	DriverID       int32     `db:"driver_id"`
+	OrderInquiryID string    `db:"order_inquiry_id"`
+	PaymentID      string    `db:"payment_id"`
+	Status         string    `db:"status"`
+	CreatedAt      time.Time `db:"created_at"`
+	UpdatedAt      time.Time `db:"updated_at"`
+}
+
 type OrderInquiry struct {
 	ID                 string    `db:"id"`
 	UserID             string    `db:"user_id"`

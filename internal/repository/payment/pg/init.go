@@ -20,7 +20,7 @@ func (r pgPaymentRepository) CreatePayment(ctx context.Context, arg pModel.AddPa
 		Amount: arg.Amount,
 		Status: string(arg.Status),
 		Method: string(arg.Method),
-		QrStr:  arg.QrStr,
+		QrStr:  arg.QrString,
 	})
 	if err == pgx.ErrNoRows {
 		return "", errorCommon.NewNotFoundError("Payment not found")
@@ -37,11 +37,10 @@ func (r pgPaymentRepository) GetPayment(ctx context.Context, id string) (pModel.
 
 	return pModel.Payment{
 		ID:        p.ID,
-		OrderID:   "",
 		Amount:    p.Amount,
 		Status:    pModel.Status(p.Status),
 		Method:    pModel.Method(p.Method),
-		QrStr:     p.QrStr,
+		QrString:  p.QrStr,
 		CreatedAt: p.CreatedAt,
 		UpdatedAt: p.UpdatedAt,
 	}, nil

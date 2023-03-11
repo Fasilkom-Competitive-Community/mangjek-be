@@ -7,145 +7,154 @@ package sqlc
 
 import (
 	"context"
-	"database/sql"
+	"time"
 )
 
 const createOrder = `-- name: CreateOrder :one
-INSERT INTO orders ( driver_id
-                  , user_id
-                  , price
-                  , distance
-                  , notes
-                  , src_lat
-                  , src_lng
-                  , dst_lat
-                  , dst_lng)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+INSERT INTO orders ( id
+                   , user_id
+                   , driver_id
+                   , order_inquiry_id
+                   , payment_id
+                   , status)
+VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING id
 `
 
 type CreateOrderParams struct {
-	DriverID int32          `db:"driver_id"`
-	UserID   string         `db:"user_id"`
-	Price    int32          `db:"price"`
-	Distance int32          `db:"distance"`
-	Notes    sql.NullString `db:"notes"`
-	SrcLat   float64        `db:"src_lat"`
-	SrcLng   float64        `db:"src_lng"`
-	DstLat   float64        `db:"dst_lat"`
-	DstLng   float64        `db:"dst_lng"`
+	ID             string `db:"id"`
+	UserID         string `db:"user_id"`
+	DriverID       int32  `db:"driver_id"`
+	OrderInquiryID string `db:"order_inquiry_id"`
+	PaymentID      string `db:"payment_id"`
+	Status         string `db:"status"`
 }
 
-func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (int32, error) {
+func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (string, error) {
 	row := q.db.QueryRow(ctx, createOrder,
-		arg.DriverID,
+		arg.ID,
 		arg.UserID,
-		arg.Price,
-		arg.Distance,
-		arg.Notes,
-		arg.SrcLat,
-		arg.SrcLng,
-		arg.DstLat,
-		arg.DstLng,
+		arg.DriverID,
+		arg.OrderInquiryID,
+		arg.PaymentID,
+		arg.Status,
 	)
-	var id int32
+	var id string
 	err := row.Scan(&id)
 	return id, err
 }
 
-const deleteOrder = `-- name: DeleteOrder :exec
-DELETE
+const getOrder = `-- name: GetOrder :one
+SELECT orders.id, orders.user_id, driver_id, order_inquiry_id, payment_id, orders.status, orders.created_at, orders.updated_at, users.id, name, email, phone_number, nim, users.created_at, users.updated_at, drivers.id, drivers.user_id, police_number, vehicle_model, vehicle_type, nik, address, is_sim_active, is_stnk_active, drivers.created_at, drivers.updated_at, order_inquiries.id, order_inquiries.user_id, origin_lat, origin_long, origin_address, destination_lat, destination_long, destination_address, price, distance, duration, routes, order_inquiries.created_at, order_inquiries.updated_at, payments.id, amount, method, payments.status, qr_str, payments.created_at, payments.updated_at
 FROM orders
-WHERE id = $1
+         JOIN users ON orders.user_id = users.id
+         JOIN drivers ON orders.driver_id = drivers.id
+         JOIN order_inquiries ON orders.driver_id = order_inquiries.id
+         JOIN payments ON orders.payment_id = payments.id
+WHERE orders.id = $1
 `
 
-func (q *Queries) DeleteOrder(ctx context.Context, id int32) error {
-	_, err := q.db.Exec(ctx, deleteOrder, id)
-	return err
+type GetOrderRow struct {
+	ID                 string    `db:"id"`
+	UserID             string    `db:"user_id"`
+	DriverID           int32     `db:"driver_id"`
+	OrderInquiryID     string    `db:"order_inquiry_id"`
+	PaymentID          string    `db:"payment_id"`
+	Status             string    `db:"status"`
+	CreatedAt          time.Time `db:"created_at"`
+	UpdatedAt          time.Time `db:"updated_at"`
+	ID_2               string    `db:"id_2"`
+	Name               string    `db:"name"`
+	Email              string    `db:"email"`
+	PhoneNumber        string    `db:"phone_number"`
+	Nim                string    `db:"nim"`
+	CreatedAt_2        time.Time `db:"created_at_2"`
+	UpdatedAt_2        time.Time `db:"updated_at_2"`
+	ID_3               int32     `db:"id_3"`
+	UserID_2           string    `db:"user_id_2"`
+	PoliceNumber       string    `db:"police_number"`
+	VehicleModel       string    `db:"vehicle_model"`
+	VehicleType        string    `db:"vehicle_type"`
+	Nik                string    `db:"nik"`
+	Address            string    `db:"address"`
+	IsSimActive        bool      `db:"is_sim_active"`
+	IsStnkActive       bool      `db:"is_stnk_active"`
+	CreatedAt_3        time.Time `db:"created_at_3"`
+	UpdatedAt_3        time.Time `db:"updated_at_3"`
+	ID_4               string    `db:"id_4"`
+	UserID_3           string    `db:"user_id_3"`
+	OriginLat          float64   `db:"origin_lat"`
+	OriginLong         float64   `db:"origin_long"`
+	OriginAddress      string    `db:"origin_address"`
+	DestinationLat     float64   `db:"destination_lat"`
+	DestinationLong    float64   `db:"destination_long"`
+	DestinationAddress string    `db:"destination_address"`
+	Price              int64     `db:"price"`
+	Distance           int32     `db:"distance"`
+	Duration           int32     `db:"duration"`
+	Routes             string    `db:"routes"`
+	CreatedAt_4        time.Time `db:"created_at_4"`
+	UpdatedAt_4        time.Time `db:"updated_at_4"`
+	ID_5               string    `db:"id_5"`
+	Amount             float64   `db:"amount"`
+	Method             string    `db:"method"`
+	Status_2           string    `db:"status_2"`
+	QrStr              string    `db:"qr_str"`
+	CreatedAt_5        time.Time `db:"created_at_5"`
+	UpdatedAt_5        time.Time `db:"updated_at_5"`
 }
 
-const getOrder = `-- name: GetOrder :one
-SELECT id
-     , driver_id
-     , user_id
-     , price
-     , distance
-     , notes
-     , src_lat
-     , src_lng
-     , dst_lat
-     , dst_lng
-     , created_at
-     , updated_at
-FROM orders
-WHERE id = $1
-`
-
-func (q *Queries) GetOrder(ctx context.Context, id int32) (Order, error) {
+func (q *Queries) GetOrder(ctx context.Context, id string) (GetOrderRow, error) {
 	row := q.db.QueryRow(ctx, getOrder, id)
-	var i Order
+	var i GetOrderRow
 	err := row.Scan(
 		&i.ID,
-		&i.DriverID,
 		&i.UserID,
-		&i.Price,
-		&i.Distance,
-		&i.Notes,
-		&i.SrcLat,
-		&i.SrcLng,
-		&i.DstLat,
-		&i.DstLng,
+		&i.DriverID,
+		&i.OrderInquiryID,
+		&i.PaymentID,
+		&i.Status,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+		&i.ID_2,
+		&i.Name,
+		&i.Email,
+		&i.PhoneNumber,
+		&i.Nim,
+		&i.CreatedAt_2,
+		&i.UpdatedAt_2,
+		&i.ID_3,
+		&i.UserID_2,
+		&i.PoliceNumber,
+		&i.VehicleModel,
+		&i.VehicleType,
+		&i.Nik,
+		&i.Address,
+		&i.IsSimActive,
+		&i.IsStnkActive,
+		&i.CreatedAt_3,
+		&i.UpdatedAt_3,
+		&i.ID_4,
+		&i.UserID_3,
+		&i.OriginLat,
+		&i.OriginLong,
+		&i.OriginAddress,
+		&i.DestinationLat,
+		&i.DestinationLong,
+		&i.DestinationAddress,
+		&i.Price,
+		&i.Distance,
+		&i.Duration,
+		&i.Routes,
+		&i.CreatedAt_4,
+		&i.UpdatedAt_4,
+		&i.ID_5,
+		&i.Amount,
+		&i.Method,
+		&i.Status_2,
+		&i.QrStr,
+		&i.CreatedAt_5,
+		&i.UpdatedAt_5,
 	)
 	return i, err
-}
-
-const listOrders = `-- name: ListOrders :many
-SELECT id
-     , driver_id
-     , user_id
-     , price
-     , distance
-     , notes
-     , src_lat
-     , src_lng
-     , dst_lat
-     , dst_lng
-     , created_at
-     , updated_at
-FROM orders
-`
-
-func (q *Queries) ListOrders(ctx context.Context) ([]Order, error) {
-	rows, err := q.db.Query(ctx, listOrders)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []Order{}
-	for rows.Next() {
-		var i Order
-		if err := rows.Scan(
-			&i.ID,
-			&i.DriverID,
-			&i.UserID,
-			&i.Price,
-			&i.Distance,
-			&i.Notes,
-			&i.SrcLat,
-			&i.SrcLng,
-			&i.DstLat,
-			&i.DstLng,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
 }

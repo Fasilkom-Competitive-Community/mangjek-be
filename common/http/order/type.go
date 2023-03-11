@@ -1,6 +1,9 @@
 package http
 
-import "time"
+import (
+	httpPaymentCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http/payment"
+	"time"
+)
 
 type (
 	Location struct {
@@ -34,10 +37,10 @@ type (
 	}
 
 	AddOrder struct {
-		DriverID       string  `json:"driver_id" binding:"required"`
-		UserID         string  `json:"user_id" binding:"required"`
-		OrderInquiryID string  `json:"order_inquiry_id" binding:"required"`
-		Amount         float64 `json:"amount" binding:"required"`
-		PaymentMethod  string  `json:"payment_method" binding:"required,oneof=CASH QRIS"`
+		DriverID       string `json:"driver_id" binding:"required"`
+		UserID         string `json:"user_id" binding:"required"`
+		OrderInquiryID string `json:"order_inquiry_id" binding:"required"`
+
+		httpPaymentCommon.AddPayment
 	}
 )

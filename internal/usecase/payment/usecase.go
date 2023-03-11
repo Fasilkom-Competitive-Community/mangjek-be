@@ -23,8 +23,3 @@ type Reader interface {
 type Generator interface {
 	GenerateUUID() (string, error)
 }
-
-type PaymentConnector interface {
-	GenerateQRIS(externalID string, amount float64) (pModel.QRIS, error)
-	ReadQRIS(externalID string) (pModel.QRIS, error)
-}

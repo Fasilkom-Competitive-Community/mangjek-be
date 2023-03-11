@@ -1,30 +1,27 @@
-package xendit
+package xd
 
 import (
+	"context"
 	pModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/payment"
+	qRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/qris"
 	"github.com/xendit/xendit-go"
-	"github.com/xendit/xendit-go/client"
 	"github.com/xendit/xendit-go/qrcode"
 )
 
-type XenditClient struct {
-	client *client.API
+type xenditQRISRepository struct {
 }
 
-func NewXenditClient(secretKey string) *XenditClient {
-	return &XenditClient{client: client.New(secretKey)}
-}
-
-func (x *XenditClient) GenerateQRIS(externalID string, amount float64) (pModel.QRIS, error) {
+// CreateQRIS implements qris.QRIS
+func (r xenditQRISRepository) CreateQRIS(ctx context.Context, arg pModel.AddQRIS) (pModel.QRIS, error) {
 	req := qrcode.CreateQRCodeParams{
-		ExternalID:  externalID,
+		ExternalID:  arg.ExternalID,
+		Amount:      arg.Amount,
 		Type:        xendit.DynamicQRCode,
 		CallbackURL: "https://httpdump.app/inspect/15ef4794-3057-47e7-bb78-51778a5058a4",
-		Amount:      amount,
 	}
 	// http://localhost:4001/payments/qris/callback
 
-	resp, err := x.client.QRCode.CreateQRCode(&req)
+	resp, err := qrcode.CreateQRCodeWithContext(ctx, &req)
 	if err != nil {
 		return pModel.QRIS{}, err
 	}
@@ -33,13 +30,14 @@ func (x *XenditClient) GenerateQRIS(externalID string, amount float64) (pModel.Q
 		ID:         resp.ID,
 		ExternalID: resp.ExternalID,
 		Amount:     resp.Amount,
-		QRString:   resp.QRString,
+		QrString:   resp.QRString,
 		Status:     resp.Status,
 	}, nil
 }
 
-func (x *XenditClient) ReadQRIS(externalID string) (pModel.QRIS, error) {
-	resp, err := x.client.QRCode.GetQRCode(&qrcode.GetQRCodeParams{
+// GetQRIS implements qris.QRIS
+func (r xenditQRISRepository) GetQRIS(ctx context.Context, externalID string) (pModel.QRIS, error) {
+	resp, err := qrcode.GetQRCodeWithContext(ctx, &qrcode.GetQRCodeParams{
 		ExternalID: externalID,
 	})
 	if err != nil {
@@ -50,7 +48,11 @@ func (x *XenditClient) ReadQRIS(externalID string) (pModel.QRIS, error) {
 		ID:         resp.ID,
 		ExternalID: resp.ExternalID,
 		Amount:     resp.Amount,
-		QRString:   resp.QRString,
+		QrString:   resp.QRString,
 		Status:     resp.Status,
 	}, nil
+}
+
+func NewXenditQRISRepository() qRepo.Repository {
+	return xenditQRISRepository{}
 }

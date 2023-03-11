@@ -18,11 +18,10 @@ func (p paymentUsecase) CreatePayment(ctx context.Context, arg pModel.AddPayment
 	switch arg.Method {
 	case pModel.CashMethod:
 		_, err = p.pRepository.CreatePayment(ctx, pModel.AddPayment{
-			ID:      uuid,
-			OrderID: "",
-			Amount:  arg.Amount,
-			Status:  pModel.UnpaidStatus,
-			Method:  pModel.CashMethod,
+			ID:     uuid,
+			Amount: arg.Amount,
+			Status: pModel.UnpaidStatus,
+			Method: pModel.CashMethod,
 		})
 		if err != nil {
 			return pModel.Payment{}, err
@@ -30,18 +29,20 @@ func (p paymentUsecase) CreatePayment(ctx context.Context, arg pModel.AddPayment
 
 		return p.pRepository.GetPayment(ctx, uuid)
 	case pModel.QRISMethod:
-		qris, err := p.xenditConnector.GenerateQRIS(uuid, arg.Amount)
+		qris, err := p.qRepository.CreateQRIS(ctx, pModel.AddQRIS{
+			ExternalID: arg.ID,
+			Amount:     arg.Amount,
+		})
 		if err != nil {
 			return pModel.Payment{}, err
 		}
 
 		id, err := p.pRepository.CreatePayment(ctx, pModel.AddPayment{
-			ID:      qris.ExternalID,
-			OrderID: "",
-			Amount:  qris.Amount,
-			Status:  pModel.UnpaidStatus,
-			Method:  pModel.QRISMethod,
-			QrStr:   qris.QRString,
+			ID:       qris.ExternalID,
+			Amount:   qris.Amount,
+			Status:   pModel.UnpaidStatus,
+			Method:   pModel.QRISMethod,
+			QrString: qris.QrString,
 		})
 		if err != nil {
 			return pModel.Payment{}, err

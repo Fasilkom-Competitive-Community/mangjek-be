@@ -15,11 +15,12 @@ type (
 	Status string
 
 	Payment struct {
-		ID      string
-		OrderID string
-		Amount  float64
-		Status  Status
-		Method  Method
+		ID     string
+		Amount float64
+		Status Status
+		Method Method
+
+		QrString string
 
 		CreatedAt time.Time
 		UpdatedAt time.Time
@@ -32,5 +33,18 @@ type (
 		Method Method
 
 		QrString string
+	}
+
+	QRIS struct {
+		ID         string
+		ExternalID string
+		Amount     float64
+		QrString   string
+		Status     string
+	}
+
+	AddQRIS struct {
+		ExternalID string
+		Amount     float64
 	}
 )

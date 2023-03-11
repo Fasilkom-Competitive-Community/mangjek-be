@@ -3,17 +3,19 @@ package pg
 import (
 	"context"
 	errorCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/error"
+	store "github.com/Fasilkom-Competitive-Community/mangjek-be/common/pg"
 	"github.com/Fasilkom-Competitive-Community/mangjek-be/common/sqlc"
 	oModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/order"
+	pModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/payment"
 	oRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/order"
 	"github.com/jackc/pgx/v4"
 )
 
 type pgOrderInquiryRepository struct {
-	querier sqlc.Querier
+	querier *store.Store
 }
 
-// CreateOrderInquiry implements order.OrderInquiry
+// CreateOrderInquiry implements order.Order
 func (r pgOrderInquiryRepository) CreateOrderInquiry(ctx context.Context, arg oModel.AddOrderInquiry) (string, error) {
 	id, err := r.querier.CreateOrderInquiry(ctx, sqlc.CreateOrderInquiryParams{
 		ID:                 arg.ID,
@@ -35,7 +37,7 @@ func (r pgOrderInquiryRepository) CreateOrderInquiry(ctx context.Context, arg oM
 	return id, err
 }
 
-// DeleteOrderInquiry implements order.OrderInquiry
+// DeleteOrderInquiry implements order.Order
 func (r pgOrderInquiryRepository) DeleteOrderInquiry(ctx context.Context, id string) error {
 	err := r.querier.DeleteOrderInquiry(ctx, id)
 	if err == pgx.ErrNoRows {
@@ -44,7 +46,7 @@ func (r pgOrderInquiryRepository) DeleteOrderInquiry(ctx context.Context, id str
 	return err
 }
 
-// GetOrderInquiry implements order.OrderInquiry
+// GetOrderInquiry implements order.Order
 func (r pgOrderInquiryRepository) GetOrderInquiry(ctx context.Context, id string) (oModel.OrderInquiry, error) {
 	o, err := r.querier.GetOrderInquiry(ctx, id)
 	if err == pgx.ErrNoRows {
@@ -73,6 +75,39 @@ func (r pgOrderInquiryRepository) GetOrderInquiry(ctx context.Context, id string
 	}, nil
 }
 
-func NewPGOrderInquiryRepository(querier sqlc.Querier) oRepo.Repository {
+// CreateOrder implements order.Order
+func (r pgOrderInquiryRepository) CreateOrder(ctx context.Context, payment pModel.AddPayment, order oModel.AddOrder) (string, error) {
+	var oid string
+	err := r.querier.ExecTx(ctx, func(q sqlc.Querier) error {
+		pid, err := q.CreatePayment(ctx, sqlc.CreatePaymentParams{
+			ID:     payment.ID,
+			Amount: payment.Amount,
+			Status: string(payment.Status),
+			Method: string(payment.Method),
+			QrStr:  payment.QrString,
+		})
+		if err != nil {
+			return err
+		}
+
+		order.Payment.ID = pid
+		oid, err = q.CreateOrder(ctx, sqlc.CreateOrderParams{
+			ID:             order.ID,
+			UserID:         order.UserID,
+			DriverID:       order.DriverID,
+			OrderInquiryID: order.OrderInquiryID,
+			PaymentID:      order.Payment.ID,
+			Status:         string(order.Status),
+		})
+		return err
+	})
+	if err != nil {
+		return "", err
+	}
+
+	return oid, nil
+}
+
+func NewPGOrderInquiryRepository(querier *store.Store) oRepo.Repository {
 	return pgOrderInquiryRepository{querier: querier}
 }

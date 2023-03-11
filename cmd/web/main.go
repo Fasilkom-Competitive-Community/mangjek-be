@@ -25,13 +25,16 @@ import (
 
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/xendit/xendit-go"
 	"log"
 )
 
 func main() {
 	cfg := configCommon.LoadConfig()
-	pg, querier := pgCommon.New(cfg.DatabaseURL)
-	defer pg.Close()
+	store := pgCommon.New(cfg.DatabaseURL)
+	defer store.Db.Close()
+
+	xendit.Opt.SecretKey = cfg.XenditSecretKey
 
 	app, err := firebaseCommon.NewFirebaseAdmin(cfg.CredentialType, cfg.CredentialValue)
 	if err != nil {
@@ -58,15 +61,15 @@ func main() {
 
 	aur := auRepo.NewFirebaseAuthRepository(fAuth)
 
-	ur := uRepo.NewPGUserRepository(querier)
+	ur := uRepo.NewPGUserRepository(store.Querier)
 	uc := uUCase.NewUserUsecase(ur, aur)
 	uDelivery.NewHTTPUserDelivery(api, uc, fAuth)
 
-	dr := dRepo.NewPGDriverRepository(querier)
+	dr := dRepo.NewPGDriverRepository(store.Querier)
 	dc := dUCase.NewDriverUsecase(dr, aur)
 	dDelivery.NewHTTPDriverDelivery(api, dc, fAuth)
 
-	or := oRepo.NewPGOrderInquiryRepository(querier)
+	or := oRepo.NewPGOrderInquiryRepository(store)
 	oc := oUCase.NewOrderUsecase(or, gMap, uuid)
 	oDelivery.NewHTTPOrderDelivery(api, oc, fAuth)
 

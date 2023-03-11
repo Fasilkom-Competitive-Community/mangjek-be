@@ -3,6 +3,7 @@ package order
 import (
 	dModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/driver"
 	pModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/payment"
+	uModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/user"
 	"time"
 )
 
@@ -42,17 +43,25 @@ type (
 	}
 
 	Order struct {
-		ID      string
-		Driver  dModel.Driver
-		Payment pModel.Payment
+		ID           string
+		User         uModel.User
+		Driver       dModel.Driver
+		OrderInquiry OrderInquiry
+		Payment      pModel.Payment
+		Status       Status
+
+		CreatedAt time.Time
+		UpdatedAt time.Time
 	}
 
 	AddOrder struct {
 		ID             string
 		UserID         string
-		DriverID       string
+		DriverID       int32
 		OrderInquiryID string
-		PaymentID      string
+		Status         Status
+
+		Payment pModel.AddPayment
 	}
 
 	Location struct {
