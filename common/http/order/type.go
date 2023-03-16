@@ -1,8 +1,9 @@
 package http
 
 import (
-	httpPaymentCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http/payment"
 	"time"
+
+	httpPaymentCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http/payment"
 )
 
 type (
@@ -31,9 +32,9 @@ type (
 	}
 
 	AddOrderInquiry struct {
-		UserID      string      `json:"user_id" binding:"required"`
-		Origin      AddLocation `json:"origin"`
-		Destination AddLocation `json:"destination"`
+		UserID      string   `json:"user_id" binding:"required"`
+		Origin      Location `json:"origin"`
+		Destination Location `json:"destination"`
 	}
 
 	AddOrder struct {

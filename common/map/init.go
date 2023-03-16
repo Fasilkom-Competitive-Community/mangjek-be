@@ -23,9 +23,10 @@ func NewMapCalculator(apiKey string) (*MapCalculator, error) {
 }
 
 func (m *MapCalculator) CalculateDirection(ctx context.Context, origin oModel.Location, destination oModel.Location) (oModel.Direction, error) {
+	fmt.Println(origin, destination)
 	// Format float with 15 digits after comma
-	org := fmt.Sprintf("%.15f|%.15f", origin.Latitude, origin.Longitude)
-	dst := fmt.Sprintf("%.15f|%.15f", destination.Latitude, destination.Longitude)
+	org := fmt.Sprintf("%.15f,%.15f", origin.Latitude, origin.Longitude)
+	dst := fmt.Sprintf("%.15f,%.15f", destination.Latitude, destination.Longitude)
 
 	request := &maps.DirectionsRequest{
 		Origin:        org,
@@ -36,14 +37,23 @@ func (m *MapCalculator) CalculateDirection(ctx context.Context, origin oModel.Lo
 		Region:        "ID",
 	}
 
+	fmt.Println("request", request)
+
 	routes, _, err := m.client.Directions(ctx, request)
+	// error disini
 	if err != nil {
+		fmt.Println("err :", err)
 		return oModel.Direction{}, err
 	}
 
+	fmt.Println("routes aman", routes)
+
 	if len(routes) == 0 {
+		fmt.Println(err)
 		return oModel.Direction{}, errors.New("MAP_COMMON.ROUTE_IS_NOT_FOUND")
 	}
+
+	fmt.Println("Direction aman")
 
 	decode, err := routes[0].OverviewPolyline.Decode()
 	if err != nil {
