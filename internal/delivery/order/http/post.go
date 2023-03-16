@@ -1,6 +1,7 @@
 package http
 
 import (
+	pModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/payment"
 	"net/http"
 
 	httpCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http"
@@ -75,13 +76,29 @@ func (d HTTPOrderDelivery) addOrderInquiry(c *gin.Context) {
 }
 
 func (d HTTPOrderDelivery) addOrder(c *gin.Context) {
-	// ctx := c.Request.Context()
-	// au := c.MustGet(httpCommon.AUTH_USER).(uModel.AuthUser)
+	ctx := c.Request.Context()
+	au := c.MustGet(httpCommon.AUTH_USER).(uModel.AuthUser)
 
-	// var o httpOrderCommon.AddOrder
-	// if err := c.ShouldBindJSON(&o); err != nil {
-	// 	c.Error(err).SetType(gin.ErrorTypeBind)
-	// 	return
-	// }
-	return
+	var o httpOrderCommon.AddOrder
+	if err := c.ShouldBindJSON(&o); err != nil {
+		c.Error(err).SetType(gin.ErrorTypeBind)
+		return
+	}
+
+	ro, err := d.orderUCase.CreateOrder(ctx, oModel.AddOrder{
+		UserID:         o.UserID,
+		DriverID:       o.DriverID,
+		OrderInquiryID: o.OrderInquiryID,
+		Status:         "",
+		Payment: pModel.AddPayment{
+			Amount: o.AddPayment.Amount,
+			Method: pModel.Method(o.AddPayment.Method),
+		},
+	}, au)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, ro)
 }

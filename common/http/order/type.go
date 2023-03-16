@@ -38,10 +38,23 @@ type (
 	}
 
 	AddOrder struct {
-		DriverID       string `json:"driver_id" binding:"required"`
+		DriverID       int32  `json:"driver_id" binding:"required"`
 		UserID         string `json:"user_id" binding:"required"`
 		OrderInquiryID string `json:"order_inquiry_id" binding:"required"`
 
 		httpPaymentCommon.AddPayment
+	}
+
+	Order struct {
+		ID          string     `json:"id"`
+		UserID      string     `json:"user_id"`
+		Price       int64      `json:"price"`
+		Distance    int32      `json:"distance"`
+		Duration    int32      `json:"duration"`
+		Origin      Location   `json:"origin"`
+		Destination Location   `json:"destination"`
+		Routes      []Location `json:"routes"`
+		CreatedAt   time.Time  `json:"created_at"`
+		UpdatedAt   time.Time  `json:"updated_at"`
 	}
 )

@@ -3,6 +3,7 @@ package order
 import (
 	"context"
 	"errors"
+	dModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/driver"
 	oModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/order"
 	pModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/payment"
 	uModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/user"
@@ -78,5 +79,41 @@ func (u orderUsecase) CreateOrder(ctx context.Context, arg oModel.AddOrder, au u
 		return oModel.Order{}, err
 	}
 
-	return oModel.Order{}, nil
+	o := oModel.Order{
+		ID: oid,
+		User: uModel.User{
+			ID:          us.ID,
+			Name:        us.Name,
+			Email:       us.Email,
+			PhoneNumber: us.PhoneNumber,
+			Nim:         us.Nim,
+		},
+		Driver: dModel.Driver{
+			ID:           d.ID,
+			UserID:       d.UserID,
+			PoliceNumber: d.PoliceNumber,
+			VehicleModel: d.VehicleModel,
+			VehicleType:  d.VehicleType,
+		},
+		OrderInquiry: oModel.OrderInquiry{
+			ID:           oi.ID,
+			UserID:       oi.UserID,
+			OrderRouteID: oi.OrderRouteID,
+			Price:        oi.Price,
+			Distance:     oi.Distance,
+			Duration:     oi.Duration,
+			Origin:       oi.Origin,
+			Destination:  oi.Destination,
+			Routes:       oi.Routes,
+		},
+		Payment: pModel.Payment{
+			ID:     pid,
+			Amount: ap.Amount,
+			Status: ap.Status,
+			Method: ap.Method,
+		},
+		Status: ao.Status,
+	}
+
+	return o, nil
 }
