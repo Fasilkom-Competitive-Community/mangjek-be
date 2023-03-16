@@ -1,6 +1,10 @@
 package http
 
 import (
+	"github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/driver"
+	"github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/payment"
+	"github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/user"
+	"google.golang.org/grpc/status"
 	"time"
 
 	httpPaymentCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http/payment"
@@ -56,5 +60,16 @@ type (
 		Routes      []Location `json:"routes"`
 		CreatedAt   time.Time  `json:"created_at"`
 		UpdatedAt   time.Time  `json:"updated_at"`
+	}
+
+	GetOrder struct {
+		ID           string          `json:"id"`
+		User         user.User       `json:"user"`
+		Driver       driver.Driver   `json:"driver"`
+		OrderInquiry OrderInquiry    `json:"order_inquiry"`
+		Payment      payment.Payment `json:"payment"`
+		Status       status.Status   `json:"status"`
+		CreatedAt    time.Time       `json:"created_at"`
+		UpdatedAt    time.Time       `json:"updated_at"`
 	}
 )

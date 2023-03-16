@@ -20,6 +20,7 @@ type Writer interface {
 
 type Reader interface {
 	GetOrderInquiry(ctx context.Context, id string, au uModel.AuthUser) (oModel.OrderInquiry, error)
+	GetOrder(ctx context.Context, id string, au uModel.AuthUser) (oModel.Order, error)
 }
 
 type Calculator interface {

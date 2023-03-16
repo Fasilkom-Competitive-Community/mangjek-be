@@ -39,4 +39,8 @@ type (
 		IsSimActive  bool
 		IsStnkActive bool
 	}
+	getDriverName struct {
+		UserID string
+		Name   string
+	}
 )

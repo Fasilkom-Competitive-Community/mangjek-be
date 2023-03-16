@@ -57,3 +57,30 @@ func (d HTTPOrderDelivery) getOrderInquiry(c *gin.Context) {
 
 	c.JSON(http.StatusOK, httpCommon.Response{Data: resp})
 }
+
+func (d HTTPOrderDelivery) getOrder(c *gin.Context) {
+	ctx := c.Request.Context()
+	auStr, _ := c.Get(httpCommon.AUTH_USER)
+	au := auStr.(uModel.AuthUser)
+
+	uId := c.Param("ID")
+
+	o, err := d.orderUCase.GetOrder(ctx, uId, au)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	//resp := httpOrderCommon.GetOrder{
+	//	ID:           o.ID,
+	//	User:         o.User,
+	//	Driver:       o.Driver,
+	//	OrderInquiry: o.OrderInquiry,
+	//	Payment:      o.Payment,
+	//	Status:       o.Status,
+	//	CreatedAt:    o.CreatedAt,
+	//	UpdatedAt:    o.UpdatedAt,
+	//}
+
+	c.JSON(http.StatusOK, httpCommon.Response{Data: o})
+}

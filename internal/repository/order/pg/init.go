@@ -5,8 +5,10 @@ import (
 	errorCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/error"
 	store "github.com/Fasilkom-Competitive-Community/mangjek-be/common/pg"
 	"github.com/Fasilkom-Competitive-Community/mangjek-be/common/sqlc"
+	dModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/driver"
 	oModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/order"
 	pModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/payment"
+	uModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/user"
 	oRepo "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/repository/order"
 	"github.com/jackc/pgx/v4"
 )
@@ -106,6 +108,49 @@ func (r pgOrderInquiryRepository) CreateOrder(ctx context.Context, payment pMode
 	}
 
 	return oid, nil
+}
+
+func (r pgOrderInquiryRepository) GetOrder(ctx context.Context, id string) (oModel.Order, error) {
+	o, err := r.querier.GetOrder(ctx, id)
+	if err == pgx.ErrNoRows {
+		return oModel.Order{}, errorCommon.NewNotFoundError("Order not found")
+	}
+
+	return oModel.Order{
+		ID: o.ID,
+		User: uModel.User{
+			ID:   o.UserID,
+			Name: o.Name,
+		},
+		Driver: dModel.Driver{
+			ID:           o.DriverID,
+			PoliceNumber: o.PoliceNumber,
+			VehicleModel: o.VehicleModel,
+			VehicleType:  o.VehicleType,
+		},
+		OrderInquiry: oModel.OrderInquiry{
+			ID:       o.OrderInquiryID,
+			Price:    o.Price,
+			Distance: o.Distance,
+			Duration: o.Duration,
+			Origin: oModel.Location{
+				Address: o.OriginAddress,
+			},
+			Destination: oModel.Location{
+				Address: o.DestinationAddress,
+			},
+		},
+		Payment: pModel.Payment{
+			ID:       o.PaymentID,
+			Amount:   o.Amount,
+			Status:   pModel.Status(o.Status_2),
+			Method:   pModel.Method(o.Method),
+			QrString: o.QrStr,
+		},
+		Status:    oModel.Status(o.Status),
+		CreatedAt: o.CreatedAt,
+		UpdatedAt: o.UpdatedAt,
+	}, nil
 }
 
 func NewPGOrderInquiryRepository(querier *store.Store) oRepo.Repository {
