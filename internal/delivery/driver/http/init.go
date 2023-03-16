@@ -14,8 +14,9 @@ type HTTPDriverDelivery struct {
 func NewHTTPDriverDelivery(g *gin.RouterGroup, driverUCase dUCase.Usecase, fAuth *auth.Client) HTTPDriverDelivery {
 	h := HTTPDriverDelivery{driverUCase: driverUCase}
 
-	g.GET("/drivers/:id", h.getDriver, httpCommon.Auth(fAuth))
-	g.POST("/drivers", h.addDriver, httpCommon.Auth(fAuth))
+	g.GET("/drivers/:id", httpCommon.Auth(fAuth), h.getDriver)
+	g.POST("/drivers", httpCommon.Auth(fAuth), h.addDriver)
+	g.PUT("/drivers/:id", httpCommon.Auth(fAuth), h.updateDriver)
 
 	return h
 }

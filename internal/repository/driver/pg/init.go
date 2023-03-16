@@ -77,7 +77,11 @@ func (r pgDriverRepository) ListDrivers(ctx context.Context) ([]dModel.Driver, e
 
 // UpdateDriver implements driver.Driver
 func (r pgDriverRepository) UpdateDriver(ctx context.Context, arg dModel.UpdateDriver) (int32, error) {
-	panic("not implemented")
+	id, err := r.querier.UpdateDriver(ctx, sqlc.UpdateDriverParams(arg))
+	if err == pgx.ErrNoRows {
+		return 0, errorCommon.NewNotFoundError("Driver not found")
+	}
+	return id, err
 }
 
 func NewPGDriverRepository(querier sqlc.Querier) dRepo.Repository {

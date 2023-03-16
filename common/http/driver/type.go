@@ -17,13 +17,24 @@ type (
 		UpdatedAt    time.Time `json:"updated_at"`
 	}
 	AddDriver struct {
-		UserID       string `json:"user_id" validate:"required"`
-		PoliceNumber string `json:"police_number" validate:"required"`
-		VehicleModel string `json:"vehicle_model" validate:"required"`
-		VehicleType  string `json:"vehicle_type" validate:"required,oneof=MOTOR MOBIL"`
-		Nik          string `json:"nik" validate:"required"`
-		Address      string `json:"address" validate:"required"`
-		IsSimActive  bool   `json:"is_sim_active" validate:"required"`
-		IsStnkActive bool   `json:"is_stnk_active" validate:"required"`
+		UserID       string `json:"user_id" binding:"required"`
+		PoliceNumber string `json:"police_number" binding:"required"`
+		VehicleModel string `json:"vehicle_model" binding:"required"`
+		VehicleType  string `json:"vehicle_type" binding:"required,oneof=MOTOR MOBIL"`
+		Nik          string `json:"nik" binding:"required"`
+		Address      string `json:"address" binding:"required"`
+		IsSimActive  bool   `json:"is_sim_active" binding:"required"`
+		IsStnkActive bool   `json:"is_stnk_active" binding:"required"`
+	}
+
+	UpdateDriver struct {
+		UserID       string `json:"user_id" binding:"required"`
+		PoliceNumber string `json:"police_number" binding:"required"`
+		VehicleModel string `json:"vehicle_model" binding:"required"`
+		VehicleType  string `json:"vehicle_type" binding:"required,oneof=MOTOR MOBIL"`
+		Nik          string `json:"nik" binding:"required"`
+		Address      string `json:"address" binding:"required"`
+		IsSimActive  bool   `json:"is_sim_active" binding:"required"`
+		IsStnkActive bool   `json:"is_stnk_active" binding:"required"`
 	}
 )
