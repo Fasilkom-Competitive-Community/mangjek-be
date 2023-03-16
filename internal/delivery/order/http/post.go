@@ -1,10 +1,11 @@
 package http
 
 import (
+	"net/http"
+
 	httpCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http"
 	oModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/order"
 	"github.com/gin-gonic/gin"
-	"net/http"
 
 	httpOrderCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http/order"
 	uModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/user"
@@ -74,12 +75,13 @@ func (d HTTPOrderDelivery) addOrderInquiry(c *gin.Context) {
 }
 
 func (d HTTPOrderDelivery) addOrder(c *gin.Context) {
-	ctx := c.Request.Context()
-	au := c.MustGet(httpCommon.AUTH_USER).(uModel.AuthUser)
+	// ctx := c.Request.Context()
+	// au := c.MustGet(httpCommon.AUTH_USER).(uModel.AuthUser)
 
-	var o httpOrderCommon.AddOrder
-	if err := c.ShouldBindJSON(&o); err != nil {
-		c.Error(err).SetType(gin.ErrorTypeBind)
-		return
-	}
+	// var o httpOrderCommon.AddOrder
+	// if err := c.ShouldBindJSON(&o); err != nil {
+	// 	c.Error(err).SetType(gin.ErrorTypeBind)
+	// 	return
+	// }
+	return
 }

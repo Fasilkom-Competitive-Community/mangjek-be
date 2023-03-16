@@ -26,9 +26,10 @@ import (
 	fDelivery "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/delivery/file/http"
 
 	"fmt"
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/xendit/xendit-go"
-	"log"
 )
 
 func main() {
@@ -72,7 +73,7 @@ func main() {
 	dDelivery.NewHTTPDriverDelivery(api, dc, fAuth)
 
 	or := oRepo.NewPGOrderInquiryRepository(store)
-	oc := oUCase.NewOrderUsecase(or, gMap, uuid)
+	oc := oUCase.NewOrderUsecase(or, ur, dr, gMap, uuid)
 	oDelivery.NewHTTPOrderDelivery(api, oc, fAuth)
 
 	fDelivery.NewHTTPFileDelivery(api, fAuth)

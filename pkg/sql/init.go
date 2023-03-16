@@ -1,9 +1,9 @@
 package sql
 
-import (
-	SqlcCommon "todo-android-be/common/sqlc"
-)
+// import (
+// 	SqlcCommon "todo-android-be/common/sqlc"
+// )
 
-var (
-	New = SqlcCommon.New
-)
+// var (
+// 	New = SqlcCommon.New
+// )

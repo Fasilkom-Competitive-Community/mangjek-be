@@ -32,6 +32,9 @@ run:
 	@echo ">> Running ${BIN} binary"
 	@bin/${BIN}
 
+run3:
+	@bash -c 'set -o allexport; source .env; set +o allexport; go run cmd/web/main.go'
+
 .PHONY: clean-bin
 clean-bin:
 	@echo ">> Removing binary directory"
