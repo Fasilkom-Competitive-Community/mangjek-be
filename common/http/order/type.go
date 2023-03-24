@@ -45,6 +45,10 @@ type (
 		httpPaymentCommon.AddPayment
 	}
 
+	UpdateOrderStatus struct {
+		Status string `form:"status" binding:"required,oneof='ON PROGRESS' 'PICKED UP' 'ARRIVED''"`
+	}
+
 	Order struct {
 		ID          string     `json:"id"`
 		UserID      string     `json:"user_id"`

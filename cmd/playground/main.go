@@ -13,7 +13,26 @@ import (
 
 func main() {
 	//directionMap()
-	paymentQRISXendit()
+	//paymentQRISXendit()
+	calculatePrice()
+}
+
+func calculatePrice() {
+	var price int64
+	//distance := 2200
+	//distance := 5100
+	distance := 5400
+	if distance <= 3_000 {
+		price = 5_000
+	} else {
+		price = int64(distance) * 2
+		remainder := price % 500
+		if remainder != 0 {
+			price = price - remainder + 500
+		}
+	}
+
+	fmt.Println(price)
 }
 
 func paymentQRISXendit() {
@@ -47,8 +66,8 @@ func directionMap() {
 	}
 
 	request := &maps.DirectionsRequest{
-		Origin:        "-0.955656130989188,114.33822509249502",
-		Destination:   "39.17342299237161,-95.6368425602725",
+		Origin:        "-3.2172930344764357,104.64876743362301",
+		Destination:   "-3.2207925726196533,104.65041628792214",
 		Mode:          maps.TravelModeDriving,
 		TrafficModel:  maps.TrafficModelBestGuess,
 		DepartureTime: strconv.Itoa(int(time.Now().Unix())),

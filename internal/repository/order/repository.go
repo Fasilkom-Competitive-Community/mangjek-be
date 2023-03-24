@@ -12,4 +12,6 @@ type Repository interface {
 	DeleteOrderInquiry(ctx context.Context, id string) error
 
 	CreateOrder(ctx context.Context, payment pModel.AddPayment, order oModel.AddOrder) (string, error)
+	GetOrder(ctx context.Context, id string) (oModel.Order, error)
+	UpdateOrderStatus(ctx context.Context, order oModel.UpdateOrderStatus) (string, error)
 }

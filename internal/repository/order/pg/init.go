@@ -108,6 +108,23 @@ func (r pgOrderInquiryRepository) CreateOrder(ctx context.Context, payment pMode
 	return oid, nil
 }
 
+// GetOrder implements order.Order
+func (r pgOrderInquiryRepository) GetOrder(ctx context.Context, id string) (oModel.Order, error) {
+	panic("not implemented")
+}
+
+// UpdateOrderStatus implements order.Order
+func (r pgOrderInquiryRepository) UpdateOrderStatus(ctx context.Context, order oModel.UpdateOrderStatus) (string, error) {
+	id, err := r.querier.UpdateOrderStatus(ctx, sqlc.UpdateOrderStatusParams{
+		ID:     order.ID,
+		Status: string(order.Status),
+	})
+	if err == pgx.ErrNoRows {
+		return "", errorCommon.NewNotFoundError("Order not found")
+	}
+	return id, nil
+}
+
 func NewPGOrderInquiryRepository(querier *store.Store) oRepo.Repository {
 	return pgOrderInquiryRepository{querier: querier}
 }

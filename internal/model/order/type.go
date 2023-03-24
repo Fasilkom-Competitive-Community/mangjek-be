@@ -64,6 +64,11 @@ type (
 		Payment pModel.AddPayment
 	}
 
+	UpdateOrderStatus struct {
+		ID     string
+		Status Status
+	}
+
 	Location struct {
 		Address   string
 		Latitude  float64

@@ -16,3 +16,10 @@ INSERT INTO orders ( id
                    , status)
 VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING id;
+
+-- name: UpdateOrderStatus :one
+UPDATE orders
+SET status     = $2
+  , updated_at = CURRENT_TIMESTAMP
+WHERE id = $1
+RETURNING id;

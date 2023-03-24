@@ -22,17 +22,27 @@ func (u orderUsecase) CreateOrderInquiry(ctx context.Context, arg oModel.AddOrde
 		return oModel.OrderInquiry{}, err
 	}
 
-	/* Calculate price
-	Rp2000 per km
-	If price < 5000, make price = 5000
-	*/
-
 	arg.ID, err = u.uuidGenerator.GenerateUUID()
 	if err != nil {
 		return oModel.OrderInquiry{}, err
 	}
 
-	arg.Price = int64(dr.Distance) * 2
+	/* Calculate price
+	<= 3km → Rp 5.000
+	> 3km, per kilo dihitung Rp2.000
+	ex: jarak 3.2 km = Rp5.000 + (0.2 * Rp2.000) = Rp5.400 dibulatkan ke atas (pecahan Rp500) menjadi Rp5.500
+	*/
+
+	if dr.Distance <= 3_000 {
+		arg.Price = 5_000
+	} else {
+		arg.Price = int64(dr.Distance) * 2
+		remainder := arg.Price % 500
+		if remainder != 0 {
+			arg.Price = arg.Price - remainder + 500
+		}
+	}
+
 	arg.Duration = dr.Duration
 	arg.Origin.Address = dr.Origin.Address
 	arg.Destination.Address = dr.Destination.Address

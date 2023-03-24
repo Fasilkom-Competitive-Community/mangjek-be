@@ -16,6 +16,7 @@ type Writer interface {
 	DeleteOrderInquiry(ctx context.Context, id string, au uModel.AuthUser) error
 
 	CreateOrder(ctx context.Context, arg oModel.AddOrder, au uModel.AuthUser) (oModel.Order, error)
+	UpdateOrderStatus(ctx context.Context, arg oModel.UpdateOrderStatus, au uModel.AuthUser) error
 }
 
 type Reader interface {

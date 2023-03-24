@@ -37,23 +37,15 @@ func (m *MapCalculator) CalculateDirection(ctx context.Context, origin oModel.Lo
 		Region:        "ID",
 	}
 
-	fmt.Println("request", request)
-
 	routes, _, err := m.client.Directions(ctx, request)
-	// error disini
 	if err != nil {
-		fmt.Println("err :", err)
 		return oModel.Direction{}, err
 	}
-
-	fmt.Println("routes aman", routes)
 
 	if len(routes) == 0 {
 		fmt.Println(err)
 		return oModel.Direction{}, errors.New("MAP_COMMON.ROUTE_IS_NOT_FOUND")
 	}
-
-	fmt.Println("Direction aman")
 
 	decode, err := routes[0].OverviewPolyline.Decode()
 	if err != nil {
