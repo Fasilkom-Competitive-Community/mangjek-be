@@ -116,8 +116,14 @@ func (r pgOrderInquiryRepository) GetOrder(ctx context.Context, id string) (oMod
 		return oModel.Order{}, errorCommon.NewNotFoundError("Order not found")
 	}
 
+	d, err := r.querier.GetUser(ctx, o.UserID_2)
+	if err == pgx.ErrNoRows {
+		return oModel.Order{}, errorCommon.NewNotFoundError("Order not found")
+	}
+
 	return oModel.Order{
-		ID: o.ID,
+		ID:    o.ID,
+		DName: d.Name,
 		User: uModel.User{
 			ID:   o.UserID,
 			Name: o.Name,

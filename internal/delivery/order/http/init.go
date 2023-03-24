@@ -17,6 +17,7 @@ func NewHTTPOrderDelivery(g *gin.RouterGroup, orderUCase oUCase.Usecase, fAuth *
 	g.POST("/orders", httpCommon.Auth(fAuth), h.addOrder)
 	g.GET("/orders/inquiry/:inquiryId", httpCommon.Auth(fAuth), h.getOrderInquiry)
 	g.POST("/orders/inquiry", httpCommon.Auth(fAuth), h.addOrderInquiry)
+	g.GET("/orders/:orderId", httpCommon.Auth(fAuth), h.getOrder)
 
 	return h
 }

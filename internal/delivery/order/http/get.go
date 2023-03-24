@@ -71,16 +71,5 @@ func (d HTTPOrderDelivery) getOrder(c *gin.Context) {
 		return
 	}
 
-	//resp := httpOrderCommon.GetOrder{
-	//	ID:           o.ID,
-	//	User:         o.User,
-	//	Driver:       o.Driver,
-	//	OrderInquiry: o.OrderInquiry,
-	//	Payment:      o.Payment,
-	//	Status:       o.Status,
-	//	CreatedAt:    o.CreatedAt,
-	//	UpdatedAt:    o.UpdatedAt,
-	//}
-
 	c.JSON(http.StatusOK, httpCommon.Response{Data: o})
 }

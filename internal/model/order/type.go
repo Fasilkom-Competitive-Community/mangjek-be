@@ -4,6 +4,7 @@ import (
 	dModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/driver"
 	pModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/payment"
 	uModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/user"
+
 	"time"
 )
 
@@ -45,6 +46,7 @@ type (
 	Order struct {
 		ID           string
 		User         uModel.User
+		DName        string
 		Driver       dModel.Driver
 		OrderInquiry OrderInquiry
 		Payment      pModel.Payment

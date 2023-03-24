@@ -65,6 +65,7 @@ type (
 	GetOrder struct {
 		ID           string          `json:"id"`
 		User         user.User       `json:"user"`
+		DName        string          `json:"d_name"`
 		Driver       driver.Driver   `json:"driver"`
 		OrderInquiry OrderInquiry    `json:"order_inquiry"`
 		Payment      payment.Payment `json:"payment"`
