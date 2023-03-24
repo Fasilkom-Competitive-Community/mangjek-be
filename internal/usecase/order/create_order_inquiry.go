@@ -43,6 +43,7 @@ func (u orderUsecase) CreateOrderInquiry(ctx context.Context, arg oModel.AddOrde
 		}
 	}
 
+	arg.Distance = dr.Distance
 	arg.Duration = dr.Duration
 	arg.Origin.Address = dr.Origin.Address
 	arg.Destination.Address = dr.Destination.Address

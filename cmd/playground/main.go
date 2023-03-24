@@ -12,9 +12,9 @@ import (
 )
 
 func main() {
-	//directionMap()
+	directionMap()
 	//paymentQRISXendit()
-	calculatePrice()
+	//calculatePrice()
 }
 
 func calculatePrice() {
@@ -66,8 +66,8 @@ func directionMap() {
 	}
 
 	request := &maps.DirectionsRequest{
-		Origin:        "-3.2172930344764357,104.64876743362301",
-		Destination:   "-3.2207925726196533,104.65041628792214",
+		Origin:        "-3.210136297674036,104.65119733043355",
+		Destination:   "-3.2202908430389106,104.65190274763013",
 		Mode:          maps.TravelModeDriving,
 		TrafficModel:  maps.TrafficModelBestGuess,
 		DepartureTime: strconv.Itoa(int(time.Now().Unix())),
@@ -82,7 +82,6 @@ func directionMap() {
 
 	for _, direction := range directions {
 		//fmt.Printf("di, %+v\n", direction)
-		fmt.Println("AAAAAAAAAA")
 		decode, err := direction.OverviewPolyline.Decode()
 		if err != nil {
 			panic(err)
