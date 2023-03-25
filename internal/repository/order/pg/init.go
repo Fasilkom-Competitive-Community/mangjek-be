@@ -2,6 +2,7 @@ package pg
 
 import (
 	"context"
+	"fmt"
 	errorCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/error"
 	store "github.com/Fasilkom-Competitive-Community/mangjek-be/common/pg"
 	"github.com/Fasilkom-Competitive-Community/mangjek-be/common/sqlc"
@@ -112,13 +113,18 @@ func (r pgOrderInquiryRepository) CreateOrder(ctx context.Context, payment pMode
 
 func (r pgOrderInquiryRepository) GetOrder(ctx context.Context, id string) (oModel.Order, error) {
 	o, err := r.querier.GetOrder(ctx, id)
+
 	if err == pgx.ErrNoRows {
 		return oModel.Order{}, errorCommon.NewNotFoundError("Order not found")
 	}
 
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	d, err := r.querier.GetUser(ctx, o.UserID_2)
 	if err == pgx.ErrNoRows {
-		return oModel.Order{}, errorCommon.NewNotFoundError("Order not found")
+		return oModel.Order{}, errorCommon.NewNotFoundError("Driver not found")
 	}
 
 	return oModel.Order{

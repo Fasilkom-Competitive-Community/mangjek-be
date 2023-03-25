@@ -1,6 +1,7 @@
 package http
 
 import (
+	"fmt"
 	httpCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http"
 	httpOrderCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http/order"
 	uModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/user"
@@ -63,13 +64,41 @@ func (d HTTPOrderDelivery) getOrder(c *gin.Context) {
 	auStr, _ := c.Get(httpCommon.AUTH_USER)
 	au := auStr.(uModel.AuthUser)
 
-	uId := c.Param("ID")
+	oId := c.Param("orderId")
+	fmt.Println(oId)
 
-	o, err := d.orderUCase.GetOrder(ctx, uId, au)
+	o, err := d.orderUCase.GetOrder(ctx, oId, au)
 	if err != nil {
 		c.Error(err)
 		return
 	}
 
-	c.JSON(http.StatusOK, httpCommon.Response{Data: o})
+	resp := httpOrderCommon.GetOrder{
+		ID:    oId,
+		UName: o.User.Name,
+		Driver: httpOrderCommon.Driver{
+			Name:         o.DName,
+			PoliceNumber: o.Driver.PoliceNumber,
+			VehicleType:  o.Driver.VehicleType,
+			VehicleModel: o.Driver.VehicleModel,
+		},
+		OrderInquiry: httpOrderCommon.Inquiry{
+			Price:    o.OrderInquiry.Price,
+			Distance: o.OrderInquiry.Distance,
+			Duration: o.OrderInquiry.Duration,
+			OAddress: o.OrderInquiry.Origin.Address,
+			DAddress: o.OrderInquiry.Destination.Address,
+		},
+		Payment: httpOrderCommon.Payment{
+			Amount:   o.Payment.Amount,
+			Status:   string(o.Payment.Status),
+			Method:   string(o.Payment.Method),
+			QrString: o.Payment.QrString,
+		},
+		Status:    string(o.Status),
+		CreatedAt: o.CreatedAt,
+		UpdatedAt: o.UpdatedAt,
+	}
+
+	c.JSON(http.StatusOK, httpCommon.Response{Data: resp})
 }

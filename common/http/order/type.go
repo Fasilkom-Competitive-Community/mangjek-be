@@ -1,10 +1,6 @@
 package http
 
 import (
-	"github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/driver"
-	"github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/payment"
-	"github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/user"
-	"google.golang.org/grpc/status"
 	"time"
 
 	httpPaymentCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/http/payment"
@@ -62,15 +58,36 @@ type (
 		UpdatedAt   time.Time  `json:"updated_at"`
 	}
 
+	Driver struct {
+		Name         string `json:"name"`
+		PoliceNumber string `json:"police_number"`
+		VehicleModel string `json:"vehicle_model"`
+		VehicleType  string `json:"vehicle_type"`
+	}
+
+	Inquiry struct {
+		Price    int64  `json:"price"`
+		Distance int32  `json:"distance"`
+		Duration int32  `json:"duration"`
+		OAddress string `json:"o_address"`
+		DAddress string `json:"d_address"`
+	}
+
+	Payment struct {
+		Amount   float64 `json:"amount"`
+		Status   string  `json:"status"`
+		Method   string  `json:"method"`
+		QrString string  `json:"qr_string"`
+	}
+
 	GetOrder struct {
-		ID           string          `json:"id"`
-		User         user.User       `json:"user"`
-		DName        string          `json:"d_name"`
-		Driver       driver.Driver   `json:"driver"`
-		OrderInquiry OrderInquiry    `json:"order_inquiry"`
-		Payment      payment.Payment `json:"payment"`
-		Status       status.Status   `json:"status"`
-		CreatedAt    time.Time       `json:"created_at"`
-		UpdatedAt    time.Time       `json:"updated_at"`
+		ID           string    `json:"id"`
+		UName        string    `json:"u_name"`
+		Driver       Driver    `json:"driver"`
+		OrderInquiry Inquiry   `json:"order_inquiry"`
+		Payment      Payment   `json:"payment"`
+		Status       string    `json:"status"`
+		CreatedAt    time.Time `json:"created_at"`
+		UpdatedAt    time.Time `json:"updated_at"`
 	}
 )

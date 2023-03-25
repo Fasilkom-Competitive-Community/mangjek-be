@@ -49,7 +49,7 @@ SELECT orders.id, orders.user_id, driver_id, order_inquiry_id, payment_id, order
 FROM orders
          JOIN users ON orders.user_id = users.id
          JOIN drivers ON orders.driver_id = drivers.id
-         JOIN order_inquiries ON orders.driver_id = order_inquiries.id
+         JOIN order_inquiries ON orders.order_inquiry_id = order_inquiries.id
          JOIN payments ON orders.payment_id = payments.id
 WHERE orders.id = $1
 `

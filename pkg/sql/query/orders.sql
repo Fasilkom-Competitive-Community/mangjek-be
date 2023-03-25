@@ -3,7 +3,7 @@ SELECT *
 FROM orders
          JOIN users ON orders.user_id = users.id
          JOIN drivers ON orders.driver_id = drivers.id
-         JOIN order_inquiries ON orders.driver_id = order_inquiries.id
+         JOIN order_inquiries ON orders.order_inquiries_id = order_inquiries.id
          JOIN payments ON orders.payment_id = payments.id
 WHERE orders.id = $1;
 
