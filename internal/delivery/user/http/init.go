@@ -17,6 +17,7 @@ func NewHTTPUserDelivery(g *gin.RouterGroup, userUCase uUCase.Usecase, fAuth *au
 	g.GET("/users/:id", httpCommon.Auth(fAuth), h.getUser)
 	g.POST("/users", httpCommon.Auth(fAuth), h.addUser)
 	g.PUT("/users/:id", httpCommon.Auth(fAuth), h.updateUser)
+	g.GET("/users/history/:id", httpCommon.Auth(fAuth), h.getUserHistory)
 
 	return h
 }

@@ -20,6 +20,7 @@ type Querier interface {
 	GetDriver(ctx context.Context, id int32) (Driver, error)
 	GetDriverByUserID(ctx context.Context, userID string) (Driver, error)
 	GetOrder(ctx context.Context, id string) (GetOrderRow, error)
+	GetOrderHistory(ctx context.Context, userID string) ([]GetOrderHistoryRow, error)
 	GetOrderInquiry(ctx context.Context, id string) (GetOrderInquiryRow, error)
 	GetPayment(ctx context.Context, id string) (GetPaymentRow, error)
 	GetUser(ctx context.Context, id string) (User, error)

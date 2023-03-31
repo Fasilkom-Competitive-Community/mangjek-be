@@ -2,6 +2,9 @@ package pg
 
 import (
 	"context"
+	dModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/driver"
+	oModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/order"
+	pModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/payment"
 
 	errorCommon "github.com/Fasilkom-Competitive-Community/mangjek-be/common/error"
 	"github.com/Fasilkom-Competitive-Community/mangjek-be/common/sqlc"
@@ -77,4 +80,71 @@ func (r pgUserRepository) UpdateUser(ctx context.Context, arg uModel.UpdateUser)
 
 func NewPGUserRepository(querier sqlc.Querier) uRepo.Repository {
 	return pgUserRepository{querier: querier}
+}
+
+// GetUserHistory implements BLM
+func (r pgUserRepository) GetUserHistory(ctx context.Context, id string) ([]oModel.Order, error) {
+	o, err := r.querier.GetOrderHistory(ctx, id)
+	if err == pgx.ErrNoRows {
+		var temp []oModel.Order
+		return temp, errorCommon.NewNotFoundError("User not found")
+	}
+
+	var oh []oModel.Order
+
+	for i := 0; i < len(o); i++ {
+		d, err := r.querier.GetUser(ctx, o[i].UserID_2)
+		if err == pgx.ErrNoRows {
+			var temp []oModel.Order
+			return temp, errorCommon.NewNotFoundError("Driver not found")
+		}
+
+		oh = append(oh, oModel.Order{
+			ID:    o[i].ID,
+			DName: d.Name,
+			User: uModel.User{
+				ID:   o[i].UserID,
+				Name: o[i].Name,
+			},
+			Driver: dModel.Driver{
+				ID:           o[i].DriverID,
+				PoliceNumber: o[i].PoliceNumber,
+				VehicleModel: o[i].VehicleModel,
+				VehicleType:  o[i].VehicleType,
+			},
+			OrderInquiry: oModel.OrderInquiry{
+				ID:       o[i].OrderInquiryID,
+				Price:    o[i].Price,
+				Distance: o[i].Distance,
+				Duration: o[i].Duration,
+				Origin: oModel.Location{
+					Address: o[i].OriginAddress,
+				},
+				Destination: oModel.Location{
+					Address: o[i].DestinationAddress,
+				},
+				Routes: o[i].Routes,
+			},
+			Payment: pModel.Payment{
+				ID:       o[i].PaymentID,
+				Amount:   o[i].Amount,
+				Status:   pModel.Status(o[i].Status_2),
+				Method:   pModel.Method(o[i].Method),
+				QrString: o[i].QrStr,
+			},
+			Status:    oModel.Status(o[i].Status),
+			CreatedAt: o[i].CreatedAt,
+			UpdatedAt: o[i].UpdatedAt,
+		})
+	}
+
+	return []oModel.Order(oh), err
+
+	//{
+	//	"id" : 1,
+	//	"address" : "Gang Buntu",
+	//	"status" : "Sedang diperjalanan",
+	//	"update_at" : "2023-02-10T13:45:00.000Z"
+	//
+	//}
 }

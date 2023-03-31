@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"errors"
+	oModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/order"
 	uModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/user"
 )
 
@@ -24,4 +25,11 @@ func (u userUsecase) ListUsers(ctx context.Context, au uModel.AuthUser) ([]uMode
 		return nil, ErrListUseer_UserNotAuthorized
 	}
 	return u.uRepository.ListUsers(ctx)
+}
+
+func (u userUsecase) GetUserHistory(ctx context.Context, id string, au uModel.AuthUser) ([]oModel.Order, error) {
+	if au.IsSame(id) || au.IsAdmin() {
+		return u.uRepository.GetUserHistory(ctx, id)
+	}
+	return []oModel.Order{}, ErrGetUser_UserNotAuthorized
 }

@@ -151,6 +151,7 @@ func (r pgOrderInquiryRepository) GetOrder(ctx context.Context, id string) (oMod
 			Destination: oModel.Location{
 				Address: o.DestinationAddress,
 			},
+			Routes: o.Routes,
 		},
 		Payment: pModel.Payment{
 			ID:       o.PaymentID,

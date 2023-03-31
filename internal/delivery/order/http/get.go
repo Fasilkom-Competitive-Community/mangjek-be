@@ -7,6 +7,8 @@ import (
 	uModel "github.com/Fasilkom-Competitive-Community/mangjek-be/internal/model/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 func (d HTTPOrderDelivery) getOrderInquiry(c *gin.Context) {
@@ -98,6 +100,51 @@ func (d HTTPOrderDelivery) getOrder(c *gin.Context) {
 		Status:    string(o.Status),
 		CreatedAt: o.CreatedAt,
 		UpdatedAt: o.UpdatedAt,
+	}
+
+	c.JSON(http.StatusOK, httpCommon.Response{Data: resp})
+}
+
+func (d HTTPOrderDelivery) getOrderRoutes(c *gin.Context) {
+	ctx := c.Request.Context()
+	auStr, _ := c.Get(httpCommon.AUTH_USER)
+	au := auStr.(uModel.AuthUser)
+
+	oId := c.Param("orderId")
+	fmt.Println(oId)
+
+	o, err := d.orderUCase.GetOrder(ctx, oId, au)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	routes := o.OrderInquiry.Routes
+
+	routesArr := strings.Split(routes, ";")
+
+	var locs []httpOrderCommon.Location
+	for i := 0; i < len(routesArr); i++ {
+		temp := strings.Split(routesArr[i], ",")
+
+		lat, err := strconv.ParseFloat(temp[0], 64)
+		if err != nil {
+			panic(err)
+		}
+		long, err := strconv.ParseFloat(temp[1], 64)
+		if err != nil {
+			panic(err)
+		}
+
+		locs = append(locs, httpOrderCommon.Location{
+			Latitude:  lat,
+			Longitude: long,
+		})
+	}
+
+	resp := httpOrderCommon.GetOrderRoutes{
+		ID:     oId,
+		Routes: locs,
 	}
 
 	c.JSON(http.StatusOK, httpCommon.Response{Data: resp})

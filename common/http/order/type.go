@@ -90,4 +90,9 @@ type (
 		CreatedAt    time.Time `json:"created_at"`
 		UpdatedAt    time.Time `json:"updated_at"`
 	}
+
+	GetOrderRoutes struct {
+		ID     string     `json:"id"`
+		Routes []Location `json:"routes"`
+	}
 )
